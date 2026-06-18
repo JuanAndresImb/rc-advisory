@@ -1,0 +1,942 @@
+---
+// R&C Advisory — Page vitrine single-page
+// Astro minimal, CSS vanilla, mobile-first, Intersection Observer pour les animations
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="R&C Advisory — Expert-comptable 100% digital à Bruxelles. Comptabilité, conseil fiscal et accompagnement personnalisé pour indépendants et PME en Belgique." />
+    <title>R&C Advisory — Expert-comptable digital à Bruxelles</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <style>
+      /* ─── Fonts ──────────────────────────────────────────── */
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+      /* ─── Tokens ─────────────────────────────────────────── */
+      :root {
+        --bg:          #F7F8FA;
+        --bg-alt:      #ECEEF2;
+        --surface:     #FFFFFF;
+        --text:        #0F1419;
+        --text-muted:  #5A6473;
+        --accent:      #2B5FE8;
+        --accent-dark: #1E47C8;
+        --accent-pale: #EEF2FE;
+        --border:      rgba(15,20,25,0.10);
+        --radius-card: 16px;
+        --radius-btn:  100px;
+        --shadow-card: 0 1px 3px rgba(15,20,25,0.07), 0 8px 24px rgba(15,20,25,0.06);
+        --font:        'Outfit', system-ui, sans-serif;
+        --max-w:       1240px;
+        --nav-h:       68px;
+      }
+
+      /* ─── Reset & Base ───────────────────────────────────── */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; text-decoration: none; }
+      img { display: block; max-width: 100%; }
+
+      /* ─── Container ──────────────────────────────────────── */
+      .wrap {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* ─── Navigation ─────────────────────────────────────── */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: var(--nav-h);
+        background: rgba(247,248,250,0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+      }
+      .nav .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .nav-logo {
+        font-size: 1.125rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--text);
+      }
+      .nav-logo span {
+        color: var(--accent);
+      }
+      .btn-nav {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 22px;
+        border-radius: var(--radius-btn);
+        background: var(--accent);
+        color: #fff;
+        font-family: var(--font);
+        font-size: 0.875rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.18s ease, transform 0.12s ease;
+      }
+      .btn-nav:hover { background: var(--accent-dark); }
+      .btn-nav:active { transform: scale(0.98); }
+
+      /* ─── Hero ───────────────────────────────────────────── */
+      .hero {
+        min-height: 100dvh;
+        padding-top: var(--nav-h);
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .hero-bg::before {
+        content: '';
+        position: absolute;
+        right: -8%;
+        top: 12%;
+        width: min(580px, 60vw);
+        height: min(580px, 60vw);
+        border-radius: 50%;
+        background: radial-gradient(ellipse at 40% 40%, var(--accent-pale) 0%, transparent 70%);
+        opacity: 0.8;
+      }
+      .hero-bg::after {
+        content: '';
+        position: absolute;
+        right: 8%;
+        top: 20%;
+        width: min(320px, 35vw);
+        height: min(320px, 35vw);
+        border-radius: 50%;
+        background: radial-gradient(ellipse at 60% 60%, rgba(43,95,232,0.09) 0%, transparent 70%);
+      }
+
+      /* Grille décorative desktop uniquement */
+      .hero-grid-art {
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+        display: none;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.6s ease 0.4s;
+      }
+      .hero-grid-art.visible { opacity: 1; }
+      .hero-grid-art .tile {
+        width: clamp(72px, 8vw, 100px);
+        height: clamp(72px, 8vw, 100px);
+        border-radius: 14px;
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        box-shadow: var(--shadow-card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: clamp(0.6rem, 1vw, 0.78rem);
+        color: var(--text-muted);
+        text-align: center;
+        padding: 10px;
+        line-height: 1.3;
+        transition: transform 0.3s ease;
+      }
+      .hero-grid-art .tile.accent-tile {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+        font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+      }
+      .hero-grid-art .tile.tall {
+        grid-row: span 2;
+        height: auto;
+        min-height: clamp(156px, 17.5vw, 212px);
+        flex-direction: column;
+        gap: 4px;
+      }
+      .hero-grid-art .tile-big-num {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-weight: 800;
+        line-height: 1;
+      }
+      .hero-grid-art .tile:hover { transform: translateY(-3px); }
+
+      .hero .wrap {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding-top: 64px;
+        padding-bottom: 80px;
+      }
+      .hero-content { max-width: 600px; }
+      .hero-tag {
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 20px;
+      }
+      .hero-title {
+        font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+        color: var(--text);
+        margin-bottom: 22px;
+      }
+      .hero-title em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .hero-sub {
+        font-size: 1.0625rem;
+        color: var(--text-muted);
+        line-height: 1.65;
+        max-width: 480px;
+        margin-bottom: 36px;
+      }
+      .hero-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        padding: 14px 28px;
+        border-radius: var(--radius-btn);
+        background: var(--accent);
+        color: #fff;
+        font-family: var(--font);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+        box-shadow: 0 4px 16px rgba(43,95,232,0.25);
+      }
+      .btn-primary:hover {
+        background: var(--accent-dark);
+        box-shadow: 0 6px 20px rgba(43,95,232,0.32);
+      }
+      .btn-primary:active { transform: scale(0.98); }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        padding: 13px 24px;
+        border-radius: var(--radius-btn);
+        background: transparent;
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 0.9375rem;
+        font-weight: 500;
+        border: 1.5px solid var(--border);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+      }
+      .btn-secondary:hover {
+        border-color: var(--accent);
+        background: var(--accent-pale);
+        color: var(--accent);
+      }
+      .btn-secondary:active { transform: scale(0.98); }
+
+      /* ─── Reveal animation (Intersection Observer) ───────── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-delay-1 { transition-delay: 0.08s; }
+      .reveal-delay-2 { transition-delay: 0.16s; }
+      .reveal-delay-3 { transition-delay: 0.24s; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal { opacity: 1; transform: none; transition: none; }
+        .hero-grid-art { opacity: 1 !important; transition: none; }
+        * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+      }
+
+      /* ─── Section commons ────────────────────────────────── */
+      section { padding: 96px 0; }
+      .section-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .section-title {
+        font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin-bottom: 16px;
+      }
+
+      /* ─── Services ───────────────────────────────────────── */
+      .services { background: var(--surface); }
+      .services-header {
+        max-width: 540px;
+        margin-bottom: 52px;
+      }
+      .services-header p {
+        color: var(--text-muted);
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+      .services-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .service-card {
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-card);
+        padding: 32px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      }
+      .service-card:hover {
+        border-color: rgba(43,95,232,0.28);
+        box-shadow: var(--shadow-card);
+        transform: translateY(-2px);
+      }
+      /* Carte 100% digital : occupe toute la colonne gauche */
+      .service-card.featured {
+        background: var(--accent);
+        border-color: var(--accent);
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 320px;
+      }
+      .service-card.featured:hover {
+        border-color: var(--accent-dark);
+        box-shadow: 0 8px 32px rgba(43,95,232,0.25);
+      }
+      .service-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--accent-pale);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        flex-shrink: 0;
+      }
+      .service-card.featured .service-icon {
+        background: rgba(255,255,255,0.18);
+      }
+      .service-name {
+        font-size: 1.0625rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+      .service-card.featured .service-name {
+        color: #fff;
+        font-size: 1.25rem;
+      }
+      .service-desc {
+        font-size: 0.9375rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+      .service-card.featured .service-desc {
+        color: rgba(255,255,255,0.75);
+      }
+      .service-badge {
+        display: inline-block;
+        margin-top: 28px;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: rgba(255,255,255,0.18);
+        color: rgba(255,255,255,0.88);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        align-self: flex-start;
+      }
+
+      /* ─── Pourquoi ───────────────────────────────────────── */
+      .why { background: var(--bg); }
+      .why-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: start;
+      }
+      .why-left .section-title { margin-bottom: 20px; }
+      .why-left p {
+        color: var(--text-muted);
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 18px;
+      }
+      .why-right {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        border-left: 2px solid var(--border);
+        padding-left: 48px;
+      }
+      .why-point {
+        padding: 28px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .why-point:first-child { padding-top: 0; }
+      .why-point:last-child { border-bottom: none; padding-bottom: 0; }
+      .why-point-num {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: 0.12em;
+        margin-bottom: 10px;
+        font-feature-settings: 'tnum';
+      }
+      .why-point-title {
+        font-size: 1.0625rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.01em;
+      }
+      .why-point-text {
+        font-size: 0.9375rem;
+        color: var(--text-muted);
+        line-height: 1.65;
+      }
+
+      /* ─── Contact ────────────────────────────────────────── */
+      .contact {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+      .contact-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .contact-copy .section-title { margin-bottom: 16px; }
+      .contact-copy p {
+        color: var(--text-muted);
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 14px;
+      }
+      .free-tag {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 100px;
+        background: var(--accent-pale);
+        color: var(--accent);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        margin-top: 6px;
+      }
+      .contact-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .contact-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 24px;
+        border-radius: var(--radius-card);
+        border: 1.5px solid var(--border);
+        background: var(--bg);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        cursor: pointer;
+      }
+      .contact-card:hover {
+        border-color: rgba(43,95,232,0.28);
+        box-shadow: var(--shadow-card);
+        transform: translateX(4px);
+      }
+      .contact-card:active { transform: scale(0.99); }
+      .contact-card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .email-icon { background: var(--accent-pale); }
+      .wa-icon { background: #E8F8EE; }
+      .contact-card-label {
+        font-size: 0.79rem;
+        color: var(--text-muted);
+        margin-bottom: 2px;
+      }
+      .contact-card-value {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .contact-card-caret {
+        margin-left: auto;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+      }
+      .contact-card:hover .contact-card-caret { transform: translateX(3px); }
+
+      /* ─── Footer ─────────────────────────────────────────── */
+      .footer {
+        background: var(--text);
+        color: rgba(255,255,255,0.55);
+        padding: 44px 0;
+      }
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .footer-logo {
+        font-size: 1.0625rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 5px;
+      }
+      .footer-logo span { color: rgba(43,95,232,0.85); }
+      .footer-meta {
+        font-size: 0.8125rem;
+        color: rgba(255,255,255,0.38);
+      }
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .footer-link {
+        font-size: 0.875rem;
+        color: rgba(255,255,255,0.5);
+        transition: color 0.15s ease;
+      }
+      .footer-link:hover { color: #fff; }
+
+      /* ─── Responsive mobile-first ────────────────────────── */
+      @media (max-width: 767px) {
+        section { padding: 64px 0; }
+        .wrap { padding: 0 20px; }
+
+        .hero .wrap {
+          padding-top: 36px;
+          padding-bottom: 56px;
+          gap: 0;
+        }
+
+        .services-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .service-card.featured {
+          grid-column: auto;
+          grid-row: auto;
+          min-height: auto;
+        }
+
+        .why-inner {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .why-right {
+          border-left: none;
+          padding-left: 0;
+          border-top: 2px solid var(--border);
+          padding-top: 8px;
+        }
+        .why-point:first-child { padding-top: 20px; }
+
+        .contact-inner {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+
+        .footer-inner {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 24px;
+        }
+
+        .hero-ctas { flex-direction: column; align-items: stretch; }
+        .btn-primary, .btn-secondary { justify-content: center; width: 100%; }
+      }
+
+      @media (min-width: 768px) and (max-width: 1023px) {
+        .services-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+        .service-card.featured {
+          grid-column: 1 / span 2;
+          grid-row: auto;
+          min-height: auto;
+          flex-direction: row;
+          align-items: center;
+          gap: 32px;
+        }
+        .service-card.featured .service-badge { margin-top: 0; }
+        .why-inner { gap: 48px; }
+        .contact-inner { gap: 48px; }
+      }
+
+      @media (min-width: 1024px) {
+        .hero .wrap {
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          padding-top: 80px;
+          padding-bottom: 80px;
+        }
+        .hero-grid-art { display: grid; }
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Navigation ────────────────────────────────────────── -->
+    <nav class="nav" role="navigation" aria-label="Navigation principale">
+      <div class="wrap">
+        <div class="nav-logo">R<span>&amp;</span>C Advisory</div>
+        <a
+          href="#contact"
+          class="btn-nav"
+        >
+          Prendre rendez-vous
+        </a>
+      </div>
+    </nav>
+
+
+    <!-- Hero ──────────────────────────────────────────────── -->
+    <section class="hero" id="accueil" aria-labelledby="hero-title">
+      <div class="hero-bg" aria-hidden="true"></div>
+
+      <!-- Grille décorative — desktop seulement, zéro image placeholder -->
+      <div class="hero-grid-art" aria-hidden="true">
+        <div class="tile accent-tile tall">
+          <span class="tile-big-num">100%</span>
+          <span>Digital</span>
+        </div>
+        <div class="tile">TVA<br>IPP</div>
+        <div class="tile">ISOC</div>
+        <div class="tile">Bilan<br>annuel</div>
+        <div class="tile">Conseil<br>fiscal</div>
+      </div>
+
+      <div class="wrap">
+        <div class="hero-content">
+          <div class="hero-tag reveal">Expert-comptable · Bruxelles</div>
+          <h1 class="hero-title reveal reveal-delay-1" id="hero-title">
+            La comptabilité,<br>sans <em>la paperasse</em>.
+          </h1>
+          <p class="hero-sub reveal reveal-delay-2">
+            R&amp;C Advisory gère vos comptes entièrement à distance. Pas de déplacement, pas de classeur en carton. Un interlocuteur disponible qui connaît votre dossier.
+          </p>
+          <div class="hero-ctas reveal reveal-delay-3">
+            <a href="#contact" class="btn-primary">Prendre rendez-vous</a>
+            <a href="#services" class="btn-secondary">Voir les services</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Services ──────────────────────────────────────────── -->
+    <section class="services" id="services" aria-labelledby="services-title">
+      <div class="wrap">
+        <header class="services-header">
+          <h2 class="section-title reveal" id="services-title">
+            Quatre services,<br>un seul contact.
+          </h2>
+          <p class="reveal reveal-delay-1">
+            Pas de renvoi entre services, pas de temps perdu à réexpliquer votre situation. Ricardo suit votre dossier de A à Z.
+          </p>
+        </header>
+
+        <div class="services-grid">
+
+          <!-- Carte principale : 100% digital -->
+          <div class="service-card featured reveal">
+            <div>
+              <div class="service-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                </svg>
+              </div>
+              <div class="service-name">100% Digital</div>
+              <div class="service-desc">
+                Partage de documents en ligne, signature électronique, suivi en temps réel. Zéro paperasse physique, zéro déplacement requis - et ça fonctionne depuis le premier jour.
+              </div>
+            </div>
+            <span class="service-badge">Outils modernes</span>
+          </div>
+
+          <!-- Expertise-comptable -->
+          <div class="service-card reveal reveal-delay-1">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+            </div>
+            <div class="service-name">Expertise-comptable</div>
+            <div class="service-desc">
+              Tenue des comptes, bilans, clôture annuelle. Vos obligations légales sont gérées dans les délais, sans que vous ayez à y penser.
+            </div>
+          </div>
+
+          <!-- Conseil fiscal -->
+          <div class="service-card reveal reveal-delay-2">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div class="service-name">Conseil fiscal</div>
+            <div class="service-desc">
+              Optimisation fiscale, déclarations IPP, ISOC et TVA. Vous payez ce que vous devez, pas plus.
+            </div>
+          </div>
+
+          <!-- Accompagnement personnalisé -->
+          <div class="service-card reveal reveal-delay-3">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="service-name">Accompagnement personnalisé</div>
+            <div class="service-desc">
+              Un interlocuteur unique qui connaît votre activité, votre situation et vos objectifs. Pas un centre d'appel.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Pourquoi R&C Advisory ─────────────────────────────── -->
+    <section class="why" id="pourquoi" aria-labelledby="why-title">
+      <div class="wrap">
+        <div class="why-inner">
+          <div class="why-left">
+            <h2 class="section-title reveal" id="why-title">
+              Pourquoi choisir<br>R&amp;C Advisory ?
+            </h2>
+            <p class="reveal reveal-delay-1">
+              Ricardo Calderon a fondé R&amp;C Advisory avec un constat simple : la plupart des indépendants n'ont pas besoin d'un grand cabinet, ils ont besoin d'un comptable qui répond vite, parle clairement, et connaît leur dossier sur le bout des doigts.
+            </p>
+            <p class="reveal reveal-delay-2">
+              Dix ans de terrain en Belgique, des clients dans des secteurs très différents, et une conviction : la comptabilité n'a pas à être une source de stress.
+            </p>
+          </div>
+
+          <div class="why-right">
+            <div class="why-point reveal">
+              <div class="why-point-num">01</div>
+              <div class="why-point-title">100% digital depuis le début</div>
+              <div class="why-point-text">
+                Pas de transition à prévoir. Vous partagez vos documents via une plateforme sécurisée, vous signez en ligne, vous suivez vos deadlines depuis votre téléphone. C'est ainsi depuis le premier jour.
+              </div>
+            </div>
+            <div class="why-point reveal reveal-delay-1">
+              <div class="why-point-num">02</div>
+              <div class="why-point-title">Un seul interlocuteur, toujours disponible</div>
+              <div class="why-point-text">
+                Quand vous écrivez, c'est Ricardo qui répond. Pas un assistant, pas un stagiaire. Il connaît votre dossier et peut vous répondre concrètement, sans avoir à chercher qui vous êtes.
+              </div>
+            </div>
+            <div class="why-point reveal reveal-delay-2">
+              <div class="why-point-num">03</div>
+              <div class="why-point-title">Transparent sur les honoraires</div>
+              <div class="why-point-text">
+                Le prix est fixé en début de collaboration et ne change pas sans discussion. Vous savez ce que vous payez et pourquoi.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Contact / RDV ─────────────────────────────────────── -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div class="contact-inner">
+          <div class="contact-copy">
+            <div class="section-label">Premier contact</div>
+            <h2 class="section-title reveal" id="contact-title">
+              Parlons de votre situation.
+            </h2>
+            <p class="reveal reveal-delay-1">
+              Le premier entretien est gratuit, sans engagement. Vous expliquez votre activité, vos besoins, vos questions. Ricardo vous dit clairement ce qu'il peut faire pour vous, et à quel coût.
+            </p>
+            <p class="reveal reveal-delay-2">
+              Pas de jargon, pas de présentation commerciale. Juste une conversation utile.
+            </p>
+            <span class="free-tag reveal reveal-delay-3">Premier entretien offert</span>
+          </div>
+
+          <div class="contact-actions">
+            <a
+              href="mailto:ricardo@rcadvisory.be?subject=Demande%20de%20rendez-vous%20-%20R%26C%20Advisory"
+              class="contact-card reveal"
+              aria-label="Envoyer un email à Ricardo Calderon"
+            >
+              <div class="contact-card-icon email-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div>
+                <div class="contact-card-label">Par email</div>
+                <div class="contact-card-value">ricardo@rcadvisory.be</div>
+              </div>
+              <div class="contact-card-caret" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </div>
+            </a>
+
+            <a
+              href="https://wa.me/32XXXXXXXXX?text=Bonjour%20Ricardo%2C%20je%20souhaite%20prendre%20rendez-vous."
+              class="contact-card reveal reveal-delay-1"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Contacter via WhatsApp"
+            >
+              <div class="contact-card-icon wa-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12c0 1.9.52 3.68 1.43 5.21L2 22l4.9-1.41C8.35 21.5 10.13 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.98 14.01c-.21.59-1.22 1.13-1.68 1.2-.43.06-.98.09-1.58-.1-.36-.12-.83-.27-1.43-.53-2.5-1.08-4.14-3.6-4.27-3.77-.12-.17-.99-1.32-.99-2.52 0-1.2.63-1.79.85-2.04.22-.25.48-.31.64-.31l.46.01c.15.01.35-.06.54.41.21.5.72 1.74.78 1.87.06.13.1.27.02.44-.08.17-.12.27-.24.42-.12.15-.25.33-.36.44-.12.12-.25.25-.11.49.15.24.65 1.07 1.39 1.73.95.85 1.75 1.11 2 1.23.24.12.38.1.52-.06.14-.17.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.57-.15 1.16z" fill="#25D366"/>
+                </svg>
+              </div>
+              <div>
+                <div class="contact-card-label">Via WhatsApp</div>
+                <div class="contact-card-value">+32 XXX XX XX XX</div>
+              </div>
+              <div class="contact-card-caret" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Footer ────────────────────────────────────────────── -->
+    <footer class="footer" role="contentinfo">
+      <div class="wrap">
+        <div class="footer-inner">
+          <div>
+            <div class="footer-logo">R<span>&amp;</span>C Advisory</div>
+            <div class="footer-meta">Expert-comptable · Bruxelles · Belgique</div>
+          </div>
+          <div class="footer-links">
+            <a
+              href="mailto:ricardo@rcadvisory.be?subject=Demande%20de%20rendez-vous%20-%20R%26C%20Advisory"
+              class="footer-link"
+            >
+              ricardo@rcadvisory.be
+            </a>
+            <a
+              href="https://wa.me/32XXXXXXXXX"
+              class="footer-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+
+    <script>
+      // Scroll reveal via Intersection Observer (aucune lib externe)
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -36px 0px' }
+      );
+
+      document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+      // Grille décorative hero
+      const gridArt = document.querySelector('.hero-grid-art');
+      if (gridArt) {
+        setTimeout(() => gridArt.classList.add('visible'), 420);
+      }
+    </script>
+
+  </body>
+</html>
