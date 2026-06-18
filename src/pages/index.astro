@@ -1,6 +1,7 @@
 ---
 // R&C Advisory — Page vitrine single-page
-// Astro minimal, CSS vanilla, mobile-first, Intersection Observer pour les animations
+// Astro minimal, CSS vanilla, mobile-first
+// Hero dramatique sombre inspiré de Floria, bento asymétrique, section process dark
 ---
 
 <!doctype html>
@@ -15,29 +16,33 @@
     <meta name="generator" content={Astro.generator} />
 
     <style>
-      /* ─── Fonts ──────────────────────────────────────────── */
-      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+      /* ── Fonts ─────────────────────────────────────────── */
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-      /* ─── Tokens ─────────────────────────────────────────── */
+      /* ── Tokens ────────────────────────────────────────── */
       :root {
-        --bg:          #F7F8FA;
-        --bg-alt:      #ECEEF2;
-        --surface:     #FFFFFF;
-        --text:        #0F1419;
-        --text-muted:  #5A6473;
-        --accent:      #2B5FE8;
-        --accent-dark: #1E47C8;
-        --accent-pale: #EEF2FE;
-        --border:      rgba(15,20,25,0.10);
-        --radius-card: 16px;
-        --radius-btn:  100px;
-        --shadow-card: 0 1px 3px rgba(15,20,25,0.07), 0 8px 24px rgba(15,20,25,0.06);
-        --font:        'Outfit', system-ui, sans-serif;
-        --max-w:       1240px;
-        --nav-h:       68px;
+        --bg:           #F5F6F8;
+        --surface:      #FFFFFF;
+        --dark:         #09090B;
+        --dark-mid:     #0F1419;
+        --text:         #0F1419;
+        --muted:        #6B7280;
+        --accent:       #2B5FE8;
+        --accent-dk:    #1E47C8;
+        --accent-pale:  #EEF2FE;
+        --border:       rgba(15,20,25,0.08);
+        --border-dark:  rgba(255,255,255,0.08);
+        --r-xl:         24px;
+        --r-2xl:        32px;
+        --r-btn:        100px;
+        --font:         'Outfit', system-ui, sans-serif;
+        --max-w:        1280px;
+        --nav-h:        72px;
+        --shadow-sm:    0 1px 3px rgba(15,20,25,0.06), 0 4px 12px rgba(15,20,25,0.05);
+        --shadow-md:    0 4px 16px rgba(15,20,25,0.10), 0 12px 40px rgba(15,20,25,0.08);
       }
 
-      /* ─── Reset & Base ───────────────────────────────────── */
+      /* ── Reset ─────────────────────────────────────────── */
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
       body {
@@ -46,31 +51,36 @@
         color: var(--text);
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
       }
       a { color: inherit; text-decoration: none; }
-      img { display: block; max-width: 100%; }
 
-      /* ─── Container ──────────────────────────────────────── */
+      /* ── Container ─────────────────────────────────────── */
       .wrap {
         max-width: var(--max-w);
         margin: 0 auto;
-        padding: 0 24px;
+        padding: 0 28px;
       }
 
-      /* ─── Navigation ─────────────────────────────────────── */
+      /* ─────────────────────────────────────────────────────
+         NAV
+      ───────────────────────────────────────────────────── */
       .nav {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
+        top: 0; left: 0; right: 0;
+        z-index: 200;
         height: var(--nav-h);
-        background: rgba(247,248,250,0.88);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid var(--border);
         display: flex;
         align-items: center;
+        transition: background 0.4s ease, border-color 0.4s ease;
+        background: transparent;
+        border-bottom: 1px solid transparent;
+      }
+      .nav.nav--light {
+        background: rgba(245,246,248,0.90);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom-color: var(--border);
       }
       .nav .wrap {
         display: flex;
@@ -80,157 +90,171 @@
       }
       .nav-logo {
         font-size: 1.125rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        color: var(--text);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: #fff;
+        transition: color 0.4s ease;
       }
-      .nav-logo span {
-        color: var(--accent);
-      }
+      .nav--light .nav-logo { color: var(--text); }
+      .nav-logo span { color: var(--accent); }
       .btn-nav {
         display: inline-flex;
         align-items: center;
         padding: 10px 22px;
-        border-radius: var(--radius-btn);
-        background: var(--accent);
-        color: #fff;
+        border-radius: var(--r-btn);
+        background: #fff;
+        color: var(--text);
         font-family: var(--font);
         font-size: 0.875rem;
         font-weight: 600;
         border: none;
         cursor: pointer;
         white-space: nowrap;
-        transition: background 0.18s ease, transform 0.12s ease;
+        transition: background 0.18s, transform 0.12s, color 0.18s;
       }
-      .btn-nav:hover { background: var(--accent-dark); }
+      .nav--light .btn-nav {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-nav:hover { opacity: 0.88; }
       .btn-nav:active { transform: scale(0.98); }
 
-      /* ─── Hero ───────────────────────────────────────────── */
+      /* ─────────────────────────────────────────────────────
+         HERO — dark dramatique
+      ───────────────────────────────────────────────────── */
       .hero {
+        position: relative;
         min-height: 100dvh;
-        padding-top: var(--nav-h);
+        background: var(--dark);
         display: flex;
         align-items: center;
-        position: relative;
+        padding-top: var(--nav-h);
         overflow: hidden;
+        z-index: 10;
       }
-      .hero-bg {
+
+      /* Dot grid subtil */
+      .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+        background-size: 36px 36px;
+        pointer-events: none;
+      }
+
+      /* Fondue bas du hero vers le fond clair */
+      .hero-fade {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 180px;
+        background: linear-gradient(to top, var(--bg), transparent);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      /* Éléments décoratifs CSS */
+      .hero-deco {
         position: absolute;
         inset: 0;
         pointer-events: none;
-        z-index: 0;
+        z-index: 1;
       }
-      .hero-bg::before {
+      /* Grand cercle creux droit */
+      .hero-deco::before {
         content: '';
         position: absolute;
-        right: -8%;
-        top: 12%;
-        width: min(580px, 60vw);
-        height: min(580px, 60vw);
+        right: -10%;
+        top: 10%;
+        width: clamp(400px, 55vw, 760px);
+        height: clamp(400px, 55vw, 760px);
         border-radius: 50%;
-        background: radial-gradient(ellipse at 40% 40%, var(--accent-pale) 0%, transparent 70%);
-        opacity: 0.8;
+        border: 1px solid rgba(43,95,232,0.12);
       }
-      .hero-bg::after {
+      /* Cercle plus petit décalé */
+      .hero-deco::after {
         content: '';
-        position: absolute;
-        right: 8%;
-        top: 20%;
-        width: min(320px, 35vw);
-        height: min(320px, 35vw);
-        border-radius: 50%;
-        background: radial-gradient(ellipse at 60% 60%, rgba(43,95,232,0.09) 0%, transparent 70%);
-      }
-
-      /* Grille décorative desktop uniquement */
-      .hero-grid-art {
         position: absolute;
         right: 5%;
+        top: 25%;
+        width: clamp(200px, 28vw, 380px);
+        height: clamp(200px, 28vw, 380px);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(43,95,232,0.06) 0%, transparent 70%);
+      }
+      /* Monogramme décoratif grand format */
+      .hero-monogram {
+        position: absolute;
+        right: -2%;
         top: 50%;
         transform: translateY(-50%);
-        display: none;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.6s ease 0.4s;
-      }
-      .hero-grid-art.visible { opacity: 1; }
-      .hero-grid-art .tile {
-        width: clamp(72px, 8vw, 100px);
-        height: clamp(72px, 8vw, 100px);
-        border-radius: 14px;
-        border: 1.5px solid var(--border);
-        background: var(--surface);
-        box-shadow: var(--shadow-card);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: clamp(0.6rem, 1vw, 0.78rem);
-        color: var(--text-muted);
-        text-align: center;
-        padding: 10px;
-        line-height: 1.3;
-        transition: transform 0.3s ease;
-      }
-      .hero-grid-art .tile.accent-tile {
-        background: var(--accent);
-        color: #fff;
-        border-color: var(--accent);
-        font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-      }
-      .hero-grid-art .tile.tall {
-        grid-row: span 2;
-        height: auto;
-        min-height: clamp(156px, 17.5vw, 212px);
-        flex-direction: column;
-        gap: 4px;
-      }
-      .hero-grid-art .tile-big-num {
-        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-size: clamp(200px, 28vw, 400px);
         font-weight: 800;
+        letter-spacing: -0.06em;
         line-height: 1;
+        color: rgba(255,255,255,0.025);
+        user-select: none;
+        pointer-events: none;
       }
-      .hero-grid-art .tile:hover { transform: translateY(-3px); }
+      /* Petite ligne horizontale accent */
+      .hero-line {
+        position: absolute;
+        left: 28px;
+        bottom: 220px;
+        width: 80px;
+        height: 1px;
+        background: rgba(43,95,232,0.4);
+      }
 
       .hero .wrap {
         position: relative;
-        z-index: 1;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 48px;
-        padding-top: 64px;
-        padding-bottom: 80px;
+        z-index: 10;
+        padding-top: 72px;
+        padding-bottom: 140px;
       }
-      .hero-content { max-width: 600px; }
-      .hero-tag {
-        display: inline-block;
-        font-size: 0.8rem;
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 14px;
+        border-radius: var(--r-btn);
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.07);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: rgba(255,255,255,0.7);
+        font-size: 0.72rem;
         font-weight: 600;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 20px;
+        margin-bottom: 28px;
+      }
+      .hero-eyebrow-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        flex-shrink: 0;
       }
       .hero-title {
-        font-size: clamp(2.25rem, 5.5vw, 3.75rem);
-        font-weight: 700;
-        line-height: 1.1;
-        letter-spacing: -0.025em;
-        color: var(--text);
-        margin-bottom: 22px;
+        font-size: clamp(3rem, 7.5vw, 6.25rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 0.93;
+        color: #fff;
+        margin-bottom: 28px;
+        max-width: 16ch;
       }
       .hero-title em {
-        font-style: normal;
-        color: var(--accent);
+        font-style: italic;
+        font-weight: 300;
+        color: rgba(255,255,255,0.45);
       }
       .hero-sub {
-        font-size: 1.0625rem;
-        color: var(--text-muted);
-        line-height: 1.65;
-        max-width: 480px;
-        margin-bottom: 36px;
+        font-size: clamp(1rem, 1.5vw, 1.125rem);
+        color: rgba(255,255,255,0.55);
+        line-height: 1.7;
+        max-width: 42ch;
+        margin-bottom: 40px;
       }
       .hero-ctas {
         display: flex;
@@ -241,251 +265,407 @@
       .btn-primary {
         display: inline-flex;
         align-items: center;
-        padding: 14px 28px;
-        border-radius: var(--radius-btn);
-        background: var(--accent);
-        color: #fff;
+        padding: 15px 30px;
+        border-radius: var(--r-btn);
+        background: #fff;
+        color: var(--dark);
         font-family: var(--font);
         font-size: 0.9375rem;
-        font-weight: 600;
+        font-weight: 700;
         border: none;
         cursor: pointer;
         white-space: nowrap;
-        transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
-        box-shadow: 0 4px 16px rgba(43,95,232,0.25);
+        transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
       }
-      .btn-primary:hover {
-        background: var(--accent-dark);
-        box-shadow: 0 6px 20px rgba(43,95,232,0.32);
-      }
+      .btn-primary:hover { background: rgba(255,255,255,0.92); }
       .btn-primary:active { transform: scale(0.98); }
-      .btn-secondary {
+      .btn-ghost {
         display: inline-flex;
         align-items: center;
-        padding: 13px 24px;
-        border-radius: var(--radius-btn);
+        padding: 14px 26px;
+        border-radius: var(--r-btn);
         background: transparent;
-        color: var(--text);
+        color: rgba(255,255,255,0.7);
         font-family: var(--font);
         font-size: 0.9375rem;
         font-weight: 500;
-        border: 1.5px solid var(--border);
+        border: 1px solid rgba(255,255,255,0.18);
         cursor: pointer;
         white-space: nowrap;
-        transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+        transition: border-color 0.18s, background 0.18s, color 0.18s, transform 0.12s;
       }
-      .btn-secondary:hover {
-        border-color: var(--accent);
-        background: var(--accent-pale);
-        color: var(--accent);
+      .btn-ghost:hover {
+        border-color: rgba(255,255,255,0.38);
+        background: rgba(255,255,255,0.06);
+        color: #fff;
       }
-      .btn-secondary:active { transform: scale(0.98); }
+      .btn-ghost:active { transform: scale(0.98); }
 
-      /* ─── Reveal animation (Intersection Observer) ───────── */
+      /* Stats hero (deux chiffres clés) */
+      .hero-stats {
+        display: flex;
+        gap: 40px;
+        margin-top: 56px;
+        padding-top: 40px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        flex-wrap: wrap;
+      }
+      .hero-stat-num {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .hero-stat-label {
+        font-size: 0.8125rem;
+        color: rgba(255,255,255,0.4);
+        line-height: 1.4;
+        max-width: 18ch;
+      }
+
+      /* ─────────────────────────────────────────────────────
+         REVEAL ANIMATIONS (Intersection Observer)
+      ───────────────────────────────────────────────────── */
       .reveal {
         opacity: 0;
-        transform: translateY(28px);
-        transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-                    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateY(32px);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .reveal.visible {
+      .reveal-scale {
+        opacity: 0;
+        transform: scale(0.96);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal-x {
+        opacity: 0;
+        transform: translateX(-24px);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.visible, .reveal-scale.visible, .reveal-x.visible {
         opacity: 1;
-        transform: translateY(0);
+        transform: none;
       }
-      .reveal-delay-1 { transition-delay: 0.08s; }
-      .reveal-delay-2 { transition-delay: 0.16s; }
-      .reveal-delay-3 { transition-delay: 0.24s; }
+      .d1 { transition-delay: 0.06s; }
+      .d2 { transition-delay: 0.12s; }
+      .d3 { transition-delay: 0.18s; }
+      .d4 { transition-delay: 0.26s; }
 
       @media (prefers-reduced-motion: reduce) {
-        .reveal { opacity: 1; transform: none; transition: none; }
-        .hero-grid-art { opacity: 1 !important; transition: none; }
-        * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+        .reveal, .reveal-scale, .reveal-x {
+          opacity: 1; transform: none; transition: none;
+        }
       }
 
-      /* ─── Section commons ────────────────────────────────── */
-      section { padding: 96px 0; }
-      .section-label {
-        font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 14px;
+      /* ─────────────────────────────────────────────────────
+         SERVICES — bento asymétrique sur fond clair
+      ───────────────────────────────────────────────────── */
+      .services {
+        position: relative;
+        z-index: 20;
+        background: var(--bg);
+        padding: 96px 0 112px;
+      }
+      .services-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 32px;
+        margin-bottom: 52px;
+        flex-wrap: wrap;
       }
       .section-title {
-        font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        line-height: 1.15;
-        margin-bottom: 16px;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 1.08;
+        color: var(--text);
+      }
+      .services-header-right {
+        max-width: 36ch;
+        color: var(--muted);
+        font-size: 0.9375rem;
+        line-height: 1.65;
+        flex-shrink: 0;
       }
 
-      /* ─── Services ───────────────────────────────────────── */
-      .services { background: var(--surface); }
-      .services-header {
-        max-width: 540px;
-        margin-bottom: 52px;
-      }
-      .services-header p {
-        color: var(--text-muted);
-        font-size: 1rem;
-        line-height: 1.65;
-      }
-      .services-grid {
+      /* Bento grid asymétrique */
+      .bento {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: 300px 240px;
+        gap: 16px;
       }
-      .service-card {
-        background: var(--bg);
-        border: 1.5px solid var(--border);
-        border-radius: var(--radius-card);
-        padding: 32px;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      .bento-tile {
+        position: relative;
+        border-radius: var(--r-2xl);
+        overflow: hidden;
+        cursor: default;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.3s ease;
       }
-      .service-card:hover {
-        border-color: rgba(43,95,232,0.28);
-        box-shadow: var(--shadow-card);
-        transform: translateY(-2px);
-      }
-      /* Carte 100% digital : occupe toute la colonne gauche */
-      .service-card.featured {
-        background: var(--accent);
-        border-color: var(--accent);
-        grid-column: 1;
-        grid-row: 1 / span 2;
+      .bento-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+      /* Tile 1 : 100% Digital — grand, sombre */
+      .tile-digital {
+        grid-column: 1 / 8;
+        grid-row: 1;
+        background: linear-gradient(135deg, #0F1B35 0%, #0F2356 100%);
+        padding: 36px 40px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 320px;
       }
-      .service-card.featured:hover {
-        border-color: var(--accent-dark);
-        box-shadow: 0 8px 32px rgba(43,95,232,0.25);
+      .tile-digital::before {
+        content: '100%';
+        position: absolute;
+        right: -12px;
+        bottom: -32px;
+        font-size: clamp(120px, 16vw, 200px);
+        font-weight: 800;
+        letter-spacing: -0.06em;
+        line-height: 1;
+        color: rgba(43,95,232,0.1);
+        pointer-events: none;
+        user-select: none;
       }
-      .service-icon {
-        width: 44px;
-        height: 44px;
+
+      /* Tile 2 : Expertise-comptable */
+      .tile-compta {
+        grid-column: 8 / 13;
+        grid-row: 1;
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* Tile 3 : Conseil fiscal */
+      .tile-fiscal {
+        grid-column: 1 / 6;
+        grid-row: 2;
+        background: var(--accent);
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* Tile 4 : Accompagnement */
+      .tile-accomp {
+        grid-column: 6 / 13;
+        grid-row: 2;
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .tile-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: auto;
+      }
+      .tile-tag-dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+      }
+      /* Dark tile tags */
+      .tile-digital .tile-tag { color: rgba(255,255,255,0.45); }
+      .tile-digital .tile-tag-dot { background: rgba(43,95,232,0.7); }
+      /* Accent tile tags */
+      .tile-fiscal .tile-tag { color: rgba(255,255,255,0.6); }
+      .tile-fiscal .tile-tag-dot { background: rgba(255,255,255,0.5); }
+      /* Light tile tags */
+      .tile-compta .tile-tag, .tile-accomp .tile-tag { color: var(--muted); }
+      .tile-compta .tile-tag-dot, .tile-accomp .tile-tag-dot { background: var(--accent); }
+
+      .tile-body { position: relative; z-index: 1; }
+      .tile-name {
+        font-size: clamp(1.1rem, 2vw, 1.4rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin-bottom: 10px;
+      }
+      .tile-desc {
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+      /* Dark tile text */
+      .tile-digital .tile-name { color: #fff; font-size: clamp(1.4rem, 2.5vw, 2rem); }
+      .tile-digital .tile-desc { color: rgba(255,255,255,0.55); }
+      /* Accent tile text */
+      .tile-fiscal .tile-name { color: #fff; }
+      .tile-fiscal .tile-desc { color: rgba(255,255,255,0.7); }
+      /* Light tile text */
+      .tile-compta .tile-name, .tile-accomp .tile-name { color: var(--text); }
+      .tile-compta .tile-desc, .tile-accomp .tile-desc { color: var(--muted); }
+
+      .tile-icon {
+        width: 40px; height: 40px;
         border-radius: 12px;
-        background: var(--accent-pale);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
-        flex-shrink: 0;
+        margin-bottom: 16px;
       }
-      .service-card.featured .service-icon {
-        background: rgba(255,255,255,0.18);
-      }
-      .service-name {
-        font-size: 1.0625rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-        letter-spacing: -0.01em;
-      }
-      .service-card.featured .service-name {
-        color: #fff;
-        font-size: 1.25rem;
-      }
-      .service-desc {
-        font-size: 0.9375rem;
-        color: var(--text-muted);
-        line-height: 1.6;
-      }
-      .service-card.featured .service-desc {
-        color: rgba(255,255,255,0.75);
-      }
-      .service-badge {
-        display: inline-block;
-        margin-top: 28px;
-        padding: 6px 14px;
-        border-radius: 100px;
-        background: rgba(255,255,255,0.18);
-        color: rgba(255,255,255,0.88);
-        font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        align-self: flex-start;
-      }
+      .tile-digital .tile-icon { background: rgba(43,95,232,0.25); }
+      .tile-fiscal .tile-icon  { background: rgba(255,255,255,0.18); }
+      .tile-compta .tile-icon, .tile-accomp .tile-icon { background: var(--accent-pale); }
 
-      /* ─── Pourquoi ───────────────────────────────────────── */
-      .why { background: var(--bg); }
-      .why-inner {
+      /* ─────────────────────────────────────────────────────
+         POURQUOI — section sombre avec process timeline
+      ───────────────────────────────────────────────────── */
+      .pourquoi {
+        position: relative;
+        background: var(--dark-mid);
+        padding: 112px 0;
+        overflow: hidden;
+        z-index: 10;
+      }
+      /* Blob radial subtil */
+      .pourquoi::before {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60vw; height: 60vw;
+        max-width: 900px; max-height: 900px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(43,95,232,0.04) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .pourquoi-inner {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 80px;
         align-items: start;
+        position: relative;
+        z-index: 1;
       }
-      .why-left .section-title { margin-bottom: 20px; }
-      .why-left p {
-        color: var(--text-muted);
+      /* Sticky left */
+      .pourquoi-left {
+        position: sticky;
+        top: calc(var(--nav-h) + 40px);
+        align-self: start;
+      }
+      .pourquoi-left .section-title {
+        color: #fff;
+        margin-bottom: 20px;
+      }
+      .pourquoi-left p {
         font-size: 1rem;
-        line-height: 1.7;
-        margin-bottom: 18px;
+        color: rgba(255,255,255,0.45);
+        line-height: 1.75;
+        max-width: 40ch;
+        margin-bottom: 16px;
       }
-      .why-right {
+
+      /* Timeline steps — verticale avec bordure */
+      .steps-list {
+        padding-left: 56px;
+        border-left: 1px solid var(--border-dark);
         display: flex;
         flex-direction: column;
         gap: 0;
-        border-left: 2px solid var(--border);
-        padding-left: 48px;
       }
-      .why-point {
-        padding: 28px 0;
-        border-bottom: 1px solid var(--border);
+      .step {
+        position: relative;
+        padding-bottom: 52px;
       }
-      .why-point:first-child { padding-top: 0; }
-      .why-point:last-child { border-bottom: none; padding-bottom: 0; }
-      .why-point-num {
-        font-size: 0.72rem;
+      .step:last-child { padding-bottom: 0; }
+      .step-num-circle {
+        position: absolute;
+        left: -56px;
+        top: 0;
+        width: 40px; height: 40px;
+        margin-left: -20px; /* center on border */
+        border-radius: 50%;
+        background: var(--dark-mid);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
         font-weight: 700;
-        color: var(--accent);
-        letter-spacing: 0.12em;
-        margin-bottom: 10px;
+        letter-spacing: 0.1em;
+        color: rgba(255,255,255,0.35);
         font-feature-settings: 'tnum';
       }
-      .why-point-title {
-        font-size: 1.0625rem;
+      .step-title {
+        font-size: clamp(1.1rem, 2vw, 1.375rem);
         font-weight: 700;
-        margin-bottom: 8px;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.02em;
+        color: #fff;
+        margin-bottom: 10px;
+        line-height: 1.2;
       }
-      .why-point-text {
+      .step-text {
         font-size: 0.9375rem;
-        color: var(--text-muted);
-        line-height: 1.65;
+        color: rgba(255,255,255,0.45);
+        line-height: 1.7;
+        max-width: 44ch;
       }
+      /* Step 2 décalé à droite (comme Floria) */
+      .step:nth-child(2) { padding-left: 32px; }
 
-      /* ─── Contact ────────────────────────────────────────── */
+      /* ─────────────────────────────────────────────────────
+         CONTACT — fond clair, deux grandes actions
+      ───────────────────────────────────────────────────── */
       .contact {
         background: var(--surface);
+        padding: 112px 0;
         border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
       }
       .contact-inner {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 80px;
-        align-items: center;
+        align-items: start;
       }
-      .contact-copy .section-title { margin-bottom: 16px; }
+      .contact-copy .section-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .contact-copy .section-title { margin-bottom: 20px; }
       .contact-copy p {
-        color: var(--text-muted);
         font-size: 1rem;
+        color: var(--muted);
         line-height: 1.7;
         margin-bottom: 14px;
+        max-width: 42ch;
       }
-      .free-tag {
+      .free-pill {
         display: inline-block;
         padding: 6px 16px;
-        border-radius: 100px;
+        border-radius: var(--r-btn);
         background: var(--accent-pale);
         color: var(--accent);
-        font-size: 0.8125rem;
-        font-weight: 600;
-        margin-top: 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-top: 8px;
       }
-      .contact-actions {
+
+      /* Cartes contact cliquables */
+      .contact-cards {
         display: flex;
         flex-direction: column;
         gap: 14px;
@@ -493,279 +673,284 @@
       .contact-card {
         display: flex;
         align-items: center;
-        gap: 16px;
-        padding: 20px 24px;
-        border-radius: var(--radius-card);
+        gap: 18px;
+        padding: 24px 28px;
+        border-radius: var(--r-xl);
         border: 1.5px solid var(--border);
         background: var(--bg);
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
         cursor: pointer;
       }
       .contact-card:hover {
-        border-color: rgba(43,95,232,0.28);
-        box-shadow: var(--shadow-card);
-        transform: translateX(4px);
+        border-color: rgba(43,95,232,0.3);
+        box-shadow: var(--shadow-md);
+        transform: translateX(5px);
       }
-      .contact-card:active { transform: scale(0.99); }
-      .contact-card-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
+      .contact-card:active { transform: translateX(2px) scale(0.995); }
+      .contact-icon {
+        width: 48px; height: 48px;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
       }
-      .email-icon { background: var(--accent-pale); }
-      .wa-icon { background: #E8F8EE; }
-      .contact-card-label {
-        font-size: 0.79rem;
-        color: var(--text-muted);
+      .icon-email { background: var(--accent-pale); }
+      .icon-wa    { background: #E6F7EE; }
+      .contact-label {
+        font-size: 0.78rem;
+        color: var(--muted);
         margin-bottom: 2px;
       }
-      .contact-card-value {
-        font-size: 0.9375rem;
-        font-weight: 600;
+      .contact-value {
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
         color: var(--text);
       }
-      .contact-card-caret {
+      .contact-arrow {
         margin-left: auto;
-        color: var(--text-muted);
+        color: var(--muted);
         display: flex;
-        align-items: center;
         transition: transform 0.2s ease;
         flex-shrink: 0;
       }
-      .contact-card:hover .contact-card-caret { transform: translateX(3px); }
+      .contact-card:hover .contact-arrow { transform: translateX(4px); }
 
-      /* ─── Footer ─────────────────────────────────────────── */
+      /* ─────────────────────────────────────────────────────
+         FOOTER
+      ───────────────────────────────────────────────────── */
       .footer {
-        background: var(--text);
-        color: rgba(255,255,255,0.55);
-        padding: 44px 0;
+        background: var(--dark);
+        padding: 56px 0;
       }
       .footer-inner {
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 24px;
       }
       .footer-logo {
-        font-size: 1.0625rem;
-        font-weight: 700;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
         color: #fff;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
       }
-      .footer-logo span { color: rgba(43,95,232,0.85); }
+      .footer-logo span { color: var(--accent); }
       .footer-meta {
-        font-size: 0.8125rem;
-        color: rgba(255,255,255,0.38);
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.3);
       }
       .footer-links {
         display: flex;
-        align-items: center;
-        gap: 24px;
+        gap: 28px;
         flex-wrap: wrap;
       }
       .footer-link {
         font-size: 0.875rem;
-        color: rgba(255,255,255,0.5);
-        transition: color 0.15s ease;
+        color: rgba(255,255,255,0.45);
+        transition: color 0.15s;
       }
       .footer-link:hover { color: #fff; }
 
-      /* ─── Responsive mobile-first ────────────────────────── */
+      /* ─────────────────────────────────────────────────────
+         RESPONSIVE MOBILE-FIRST
+      ───────────────────────────────────────────────────── */
       @media (max-width: 767px) {
-        section { padding: 64px 0; }
         .wrap { padding: 0 20px; }
 
-        .hero .wrap {
-          padding-top: 36px;
-          padding-bottom: 56px;
-          gap: 0;
-        }
+        .hero .wrap { padding-top: 48px; padding-bottom: 120px; }
+        .hero-stats { gap: 24px; }
 
-        .services-grid {
+        .services { padding: 72px 0 88px; }
+        .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+        .services-header-right { max-width: 100%; }
+
+        .bento {
           grid-template-columns: 1fr;
-          gap: 14px;
+          grid-template-rows: auto;
+          gap: 12px;
         }
-        .service-card.featured {
+        .tile-digital, .tile-compta, .tile-fiscal, .tile-accomp {
           grid-column: auto;
           grid-row: auto;
-          min-height: auto;
+          min-height: 220px;
         }
+        .tile-digital::before { font-size: 120px; right: -8px; bottom: -20px; }
 
-        .why-inner {
+        .pourquoi { padding: 72px 0; }
+        .pourquoi-inner {
           grid-template-columns: 1fr;
-          gap: 36px;
+          gap: 48px;
         }
-        .why-right {
-          border-left: none;
-          padding-left: 0;
-          border-top: 2px solid var(--border);
-          padding-top: 8px;
-        }
-        .why-point:first-child { padding-top: 20px; }
+        .pourquoi-left { position: static; }
+        .steps-list { padding-left: 48px; }
+        .step-num-circle { left: -48px; margin-left: -20px; }
+        .step:nth-child(2) { padding-left: 0; }
 
-        .contact-inner {
-          grid-template-columns: 1fr;
-          gap: 40px;
-        }
+        .contact { padding: 72px 0; }
+        .contact-inner { grid-template-columns: 1fr; gap: 40px; }
 
-        .footer-inner {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 24px;
-        }
+        .footer-inner { flex-direction: column; align-items: flex-start; gap: 28px; }
 
         .hero-ctas { flex-direction: column; align-items: stretch; }
-        .btn-primary, .btn-secondary { justify-content: center; width: 100%; }
+        .btn-primary, .btn-ghost { justify-content: center; }
       }
 
       @media (min-width: 768px) and (max-width: 1023px) {
-        .services-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
-        .service-card.featured {
-          grid-column: 1 / span 2;
-          grid-row: auto;
-          min-height: auto;
-          flex-direction: row;
-          align-items: center;
-          gap: 32px;
+        .bento {
+          grid-template-rows: 260px 220px;
+          gap: 14px;
         }
-        .service-card.featured .service-badge { margin-top: 0; }
-        .why-inner { gap: 48px; }
-        .contact-inner { gap: 48px; }
-      }
-
-      @media (min-width: 1024px) {
-        .hero .wrap {
-          grid-template-columns: 1fr 1fr;
-          align-items: center;
-          padding-top: 80px;
-          padding-bottom: 80px;
-        }
-        .hero-grid-art { display: grid; }
+        .pourquoi-inner { gap: 56px; }
+        .contact-inner { gap: 56px; }
+        .step:nth-child(2) { padding-left: 16px; }
       }
     </style>
   </head>
 
   <body>
 
-    <!-- Navigation ────────────────────────────────────────── -->
-    <nav class="nav" role="navigation" aria-label="Navigation principale">
+    <!-- NAV ──────────────────────────────────────────────── -->
+    <nav class="nav" id="nav" role="navigation" aria-label="Navigation principale">
       <div class="wrap">
         <div class="nav-logo">R<span>&amp;</span>C Advisory</div>
-        <a
-          href="#contact"
-          class="btn-nav"
-        >
-          Prendre rendez-vous
-        </a>
+        <a href="#contact" class="btn-nav">Prendre rendez-vous</a>
       </div>
     </nav>
 
 
-    <!-- Hero ──────────────────────────────────────────────── -->
-    <section class="hero" id="accueil" aria-labelledby="hero-title">
-      <div class="hero-bg" aria-hidden="true"></div>
-
-      <!-- Grille décorative — desktop seulement, zéro image placeholder -->
-      <div class="hero-grid-art" aria-hidden="true">
-        <div class="tile accent-tile tall">
-          <span class="tile-big-num">100%</span>
-          <span>Digital</span>
-        </div>
-        <div class="tile">TVA<br>IPP</div>
-        <div class="tile">ISOC</div>
-        <div class="tile">Bilan<br>annuel</div>
-        <div class="tile">Conseil<br>fiscal</div>
-      </div>
+    <!-- HERO ─────────────────────────────────────────────── -->
+    <section class="hero" id="hero" aria-labelledby="hero-title">
+      <div class="hero-deco" aria-hidden="true"></div>
+      <div class="hero-monogram" aria-hidden="true">RC</div>
+      <div class="hero-line" aria-hidden="true"></div>
+      <div class="hero-fade" aria-hidden="true"></div>
 
       <div class="wrap">
-        <div class="hero-content">
-          <div class="hero-tag reveal">Expert-comptable · Bruxelles</div>
-          <h1 class="hero-title reveal reveal-delay-1" id="hero-title">
-            La comptabilité,<br>sans <em>la paperasse</em>.
-          </h1>
-          <p class="hero-sub reveal reveal-delay-2">
-            R&amp;C Advisory gère vos comptes entièrement à distance. Pas de déplacement, pas de classeur en carton. Un interlocuteur disponible qui connaît votre dossier.
-          </p>
-          <div class="hero-ctas reveal reveal-delay-3">
-            <a href="#contact" class="btn-primary">Prendre rendez-vous</a>
-            <a href="#services" class="btn-secondary">Voir les services</a>
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+          Cabinet comptable · Bruxelles
+        </div>
+        <h1 class="hero-title" id="hero-title">
+          La comptabilité,<br>
+          <em>bien faite.</em>
+        </h1>
+        <p class="hero-sub">
+          R&amp;C Advisory gère vos comptes entièrement à distance. Pas de déplacement, pas de classeur en carton. Un interlocuteur unique qui connaît votre dossier.
+        </p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn-primary">Prendre rendez-vous</a>
+          <a href="#services" class="btn-ghost">Voir les services</a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">10 ans</div>
+            <div class="hero-stat-label">d'expérience terrain en Belgique</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">100%</div>
+            <div class="hero-stat-label">digital depuis le premier jour</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">1</div>
+            <div class="hero-stat-label">interlocuteur unique, toujours le même</div>
           </div>
         </div>
       </div>
     </section>
 
 
-    <!-- Services ──────────────────────────────────────────── -->
+    <!-- SERVICES ─────────────────────────────────────────── -->
     <section class="services" id="services" aria-labelledby="services-title">
       <div class="wrap">
         <header class="services-header">
           <h2 class="section-title reveal" id="services-title">
             Quatre services,<br>un seul contact.
           </h2>
-          <p class="reveal reveal-delay-1">
+          <p class="services-header-right reveal d1">
             Pas de renvoi entre services, pas de temps perdu à réexpliquer votre situation. Ricardo suit votre dossier de A à Z.
           </p>
         </header>
 
-        <div class="services-grid">
+        <div class="bento">
 
-          <!-- Carte principale : 100% digital -->
-          <div class="service-card featured reveal">
-            <div>
-              <div class="service-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <!-- Tile 1 : 100% Digital — grand, sombre, 7/12 -->
+          <div class="bento-tile tile-digital reveal-scale">
+            <div class="tile-body">
+              <div class="tile-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
                 </svg>
               </div>
-              <div class="service-name">100% Digital</div>
-              <div class="service-desc">
-                Partage de documents en ligne, signature électronique, suivi en temps réel. Zéro paperasse physique, zéro déplacement requis - et ça fonctionne depuis le premier jour.
+              <div class="tile-name">100% Digital</div>
+              <div class="tile-desc">
+                Partage de documents en ligne, signature électronique, suivi en temps réel. Zéro paperasse physique, zéro déplacement requis.
               </div>
             </div>
-            <span class="service-badge">Outils modernes</span>
-          </div>
-
-          <!-- Expertise-comptable -->
-          <div class="service-card reveal reveal-delay-1">
-            <div class="service-icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-              </svg>
-            </div>
-            <div class="service-name">Expertise-comptable</div>
-            <div class="service-desc">
-              Tenue des comptes, bilans, clôture annuelle. Vos obligations légales sont gérées dans les délais, sans que vous ayez à y penser.
+            <div class="tile-tag">
+              <span class="tile-tag-dot" aria-hidden="true"></span>
+              Outils modernes
             </div>
           </div>
 
-          <!-- Conseil fiscal -->
-          <div class="service-card reveal reveal-delay-2">
-            <div class="service-icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-              </svg>
+          <!-- Tile 2 : Expertise-comptable — 5/12 -->
+          <div class="bento-tile tile-compta reveal-scale d1">
+            <div class="tile-body">
+              <div class="tile-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+              <div class="tile-name">Expertise-comptable</div>
+              <div class="tile-desc">
+                Tenue des comptes, bilans, clôture annuelle. Vos obligations légales gérées dans les délais.
+              </div>
             </div>
-            <div class="service-name">Conseil fiscal</div>
-            <div class="service-desc">
-              Optimisation fiscale, déclarations IPP, ISOC et TVA. Vous payez ce que vous devez, pas plus.
+            <div class="tile-tag">
+              <span class="tile-tag-dot" aria-hidden="true"></span>
+              Comptabilité
             </div>
           </div>
 
-          <!-- Accompagnement personnalisé -->
-          <div class="service-card reveal reveal-delay-3">
-            <div class="service-icon" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-              </svg>
+          <!-- Tile 3 : Conseil fiscal — accent, 5/12 -->
+          <div class="bento-tile tile-fiscal reveal-scale d2">
+            <div class="tile-body">
+              <div class="tile-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+              <div class="tile-name">Conseil fiscal</div>
+              <div class="tile-desc">
+                Optimisation fiscale, déclarations IPP, ISOC et TVA. Vous payez ce que vous devez, pas plus.
+              </div>
             </div>
-            <div class="service-name">Accompagnement personnalisé</div>
-            <div class="service-desc">
-              Un interlocuteur unique qui connaît votre activité, votre situation et vos objectifs. Pas un centre d'appel.
+            <div class="tile-tag">
+              <span class="tile-tag-dot" aria-hidden="true"></span>
+              Fiscalité
+            </div>
+          </div>
+
+          <!-- Tile 4 : Accompagnement — clair, 7/12 -->
+          <div class="bento-tile tile-accomp reveal-scale d3">
+            <div class="tile-body">
+              <div class="tile-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div class="tile-name">Accompagnement personnalisé</div>
+              <div class="tile-desc">
+                Un interlocuteur unique qui connaît votre activité, vos objectifs, votre situation. Pas un centre d'appel.
+              </div>
+            </div>
+            <div class="tile-tag">
+              <span class="tile-tag-dot" aria-hidden="true"></span>
+              Suivi sur mesure
             </div>
           </div>
 
@@ -774,85 +959,92 @@
     </section>
 
 
-    <!-- Pourquoi R&C Advisory ─────────────────────────────── -->
-    <section class="why" id="pourquoi" aria-labelledby="why-title">
+    <!-- POURQUOI — section sombre avec timeline ─────────── -->
+    <section class="pourquoi" id="pourquoi" aria-labelledby="pourquoi-title">
       <div class="wrap">
-        <div class="why-inner">
-          <div class="why-left">
-            <h2 class="section-title reveal" id="why-title">
-              Pourquoi choisir<br>R&amp;C Advisory ?
+        <div class="pourquoi-inner">
+
+          <div class="pourquoi-left">
+            <h2 class="section-title reveal-x" id="pourquoi-title">
+              L'architecture<br>d'une comptabilité<br>qui fonctionne.
             </h2>
-            <p class="reveal reveal-delay-1">
-              Ricardo Calderon a fondé R&amp;C Advisory avec un constat simple : la plupart des indépendants n'ont pas besoin d'un grand cabinet, ils ont besoin d'un comptable qui répond vite, parle clairement, et connaît leur dossier sur le bout des doigts.
+            <p class="reveal d1">
+              Ricardo Calderon a fondé R&amp;C Advisory avec un constat simple : la plupart des indépendants n'ont pas besoin d'un grand cabinet. Ils ont besoin d'un comptable qui répond vite, parle clairement, et connaît leur dossier sur le bout des doigts.
             </p>
-            <p class="reveal reveal-delay-2">
-              Dix ans de terrain en Belgique, des clients dans des secteurs très différents, et une conviction : la comptabilité n'a pas à être une source de stress.
+            <p class="reveal d2">
+              Dix ans de terrain en Belgique, des clients dans des secteurs très différents, une conviction : la comptabilité n'a pas à être une source de stress.
             </p>
           </div>
 
-          <div class="why-right">
-            <div class="why-point reveal">
-              <div class="why-point-num">01</div>
-              <div class="why-point-title">100% digital depuis le début</div>
-              <div class="why-point-text">
-                Pas de transition à prévoir. Vous partagez vos documents via une plateforme sécurisée, vous signez en ligne, vous suivez vos deadlines depuis votre téléphone. C'est ainsi depuis le premier jour.
-              </div>
+          <div class="steps-list" role="list">
+
+            <div class="step reveal" role="listitem">
+              <div class="step-num-circle" aria-hidden="true">01</div>
+              <h3 class="step-title">100% digital depuis le début</h3>
+              <p class="step-text">
+                Pas de transition à prévoir. Vous partagez vos documents via une plateforme sécurisée, signez en ligne, suivez vos deadlines depuis votre téléphone. C'est ainsi depuis le premier jour.
+              </p>
             </div>
-            <div class="why-point reveal reveal-delay-1">
-              <div class="why-point-num">02</div>
-              <div class="why-point-title">Un seul interlocuteur, toujours disponible</div>
-              <div class="why-point-text">
+
+            <div class="step reveal d1" role="listitem">
+              <div class="step-num-circle" aria-hidden="true">02</div>
+              <h3 class="step-title">Un seul interlocuteur, toujours disponible</h3>
+              <p class="step-text">
                 Quand vous écrivez, c'est Ricardo qui répond. Pas un assistant, pas un stagiaire. Il connaît votre dossier et peut vous répondre concrètement, sans avoir à chercher qui vous êtes.
-              </div>
+              </p>
             </div>
-            <div class="why-point reveal reveal-delay-2">
-              <div class="why-point-num">03</div>
-              <div class="why-point-title">Transparent sur les honoraires</div>
-              <div class="why-point-text">
+
+            <div class="step reveal d2" role="listitem">
+              <div class="step-num-circle" aria-hidden="true">03</div>
+              <h3 class="step-title">Transparent sur les honoraires</h3>
+              <p class="step-text">
                 Le prix est fixé en début de collaboration et ne change pas sans discussion. Vous savez ce que vous payez et pourquoi.
-              </div>
+              </p>
             </div>
+
           </div>
         </div>
       </div>
     </section>
 
 
-    <!-- Contact / RDV ─────────────────────────────────────── -->
+    <!-- CONTACT ──────────────────────────────────────────── -->
     <section class="contact" id="contact" aria-labelledby="contact-title">
       <div class="wrap">
         <div class="contact-inner">
+
           <div class="contact-copy">
             <div class="section-label">Premier contact</div>
             <h2 class="section-title reveal" id="contact-title">
-              Parlons de votre situation.
+              Parlons de<br>votre situation.
             </h2>
-            <p class="reveal reveal-delay-1">
+            <p class="reveal d1">
               Le premier entretien est gratuit, sans engagement. Vous expliquez votre activité, vos besoins, vos questions. Ricardo vous dit clairement ce qu'il peut faire pour vous, et à quel coût.
             </p>
-            <p class="reveal reveal-delay-2">
+            <p class="reveal d2">
               Pas de jargon, pas de présentation commerciale. Juste une conversation utile.
             </p>
-            <span class="free-tag reveal reveal-delay-3">Premier entretien offert</span>
+            <span class="free-pill reveal d3">Premier entretien offert</span>
           </div>
 
-          <div class="contact-actions">
+          <div class="contact-cards">
             <a
               href="mailto:ricardo@rcadvisory.be?subject=Demande%20de%20rendez-vous%20-%20R%26C%20Advisory"
               class="contact-card reveal"
               aria-label="Envoyer un email à Ricardo Calderon"
             >
-              <div class="contact-card-icon email-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              <div class="contact-icon icon-email" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
                 </svg>
               </div>
               <div>
-                <div class="contact-card-label">Par email</div>
-                <div class="contact-card-value">ricardo@rcadvisory.be</div>
+                <div class="contact-label">Par email</div>
+                <div class="contact-value">ricardo@rcadvisory.be</div>
               </div>
-              <div class="contact-card-caret" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <div class="contact-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="9 18 15 12 9 6"/>
                 </svg>
               </div>
@@ -860,33 +1052,34 @@
 
             <a
               href="https://wa.me/32XXXXXXXXX?text=Bonjour%20Ricardo%2C%20je%20souhaite%20prendre%20rendez-vous."
-              class="contact-card reveal reveal-delay-1"
+              class="contact-card reveal d1"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Contacter via WhatsApp"
             >
-              <div class="contact-card-icon wa-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <div class="contact-icon icon-wa" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2C6.48 2 2 6.48 2 12c0 1.9.52 3.68 1.43 5.21L2 22l4.9-1.41C8.35 21.5 10.13 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.98 14.01c-.21.59-1.22 1.13-1.68 1.2-.43.06-.98.09-1.58-.1-.36-.12-.83-.27-1.43-.53-2.5-1.08-4.14-3.6-4.27-3.77-.12-.17-.99-1.32-.99-2.52 0-1.2.63-1.79.85-2.04.22-.25.48-.31.64-.31l.46.01c.15.01.35-.06.54.41.21.5.72 1.74.78 1.87.06.13.1.27.02.44-.08.17-.12.27-.24.42-.12.15-.25.33-.36.44-.12.12-.25.25-.11.49.15.24.65 1.07 1.39 1.73.95.85 1.75 1.11 2 1.23.24.12.38.1.52-.06.14-.17.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.57-.15 1.16z" fill="#25D366"/>
                 </svg>
               </div>
               <div>
-                <div class="contact-card-label">Via WhatsApp</div>
-                <div class="contact-card-value">+32 XXX XX XX XX</div>
+                <div class="contact-label">Via WhatsApp</div>
+                <div class="contact-value">+32 XXX XX XX XX</div>
               </div>
-              <div class="contact-card-caret" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <div class="contact-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="9 18 15 12 9 6"/>
                 </svg>
               </div>
             </a>
           </div>
+
         </div>
       </div>
     </section>
 
 
-    <!-- Footer ────────────────────────────────────────────── -->
+    <!-- FOOTER ───────────────────────────────────────────── -->
     <footer class="footer" role="contentinfo">
       <div class="wrap">
         <div class="footer-inner">
@@ -916,26 +1109,37 @@
 
 
     <script>
-      // Scroll reveal via Intersection Observer (aucune lib externe)
-      const revealObserver = new IntersectionObserver(
+      // ── Nav switch dark/light via IntersectionObserver ──
+      const nav = document.getElementById('nav');
+      const hero = document.getElementById('hero');
+
+      if (nav && hero) {
+        // Sentinel at bottom of hero
+        const sentinel = document.createElement('div');
+        sentinel.style.cssText = 'position:absolute;bottom:0;height:1px;width:100%;pointer-events:none;';
+        hero.style.position = 'relative';
+        hero.appendChild(sentinel);
+
+        new IntersectionObserver(
+          ([entry]) => nav.classList.toggle('nav--light', !entry.isIntersecting),
+          { threshold: 0, rootMargin: '-' + getComputedStyle(document.documentElement).getPropertyValue('--nav-h').trim() + ' 0px 0px 0px' }
+        ).observe(sentinel);
+      }
+
+      // ── Scroll reveals ───────────────────────────────────
+      const revealObs = new IntersectionObserver(
         (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              revealObserver.unobserve(entry.target);
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              revealObs.unobserve(e.target);
             }
           });
         },
-        { threshold: 0.12, rootMargin: '0px 0px -36px 0px' }
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
       );
 
-      document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
-
-      // Grille décorative hero
-      const gridArt = document.querySelector('.hero-grid-art');
-      if (gridArt) {
-        setTimeout(() => gridArt.classList.add('visible'), 420);
-      }
+      document.querySelectorAll('.reveal, .reveal-scale, .reveal-x').forEach((el) => revealObs.observe(el));
     </script>
 
   </body>
