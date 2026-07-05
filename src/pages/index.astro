@@ -766,13 +766,53 @@
       .btn-closing:active { transform: scale(0.98); }
 
       /* ────────────────────────────────────────────────
-         FOOTER — même couleur que closing, fusion
+         FOOTER — grand logo, image Grand-Place fondue
       ──────────────────────────────────────────────── */
       .footer {
+        position: relative;
         background: var(--dark);
         border-top: none;
-        padding: 8px 0 56px;
+        overflow: hidden;
+        padding: 0 0 44px;
       }
+
+      /* Bloc du grand logo : la photo de Bruxelles réapparaît en
+         filigrane, fondue haut et bas, teintée par l'accent. */
+      .footer-brand {
+        position: relative;
+        padding: 96px 28px 72px;
+        overflow: hidden;
+      }
+      .footer-brand::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url('/brussels-grand-place.jpg');
+        background-size: cover;
+        background-position: center 42%;
+        opacity: 0.22;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 62%, transparent 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 62%, transparent 100%);
+      }
+      /* Lueur ambrée qui relie l'image au fond dark */
+      .footer-brand::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 90% 120% at 50% 45%, rgba(240,130,28,0.14) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .footer-logo-big {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 100%;
+        max-width: 1040px;
+        margin: 0 auto;
+        filter: brightness(0) invert(1);
+        opacity: 0.96;
+      }
+
       .footer-inner {
         display: flex;
         align-items: center;
@@ -780,17 +820,11 @@
         flex-wrap: wrap;
         gap: 24px;
       }
-      .footer-logo-img {
-        height: 36px;
-        width: auto;
-        filter: brightness(0) invert(1);
-        margin-bottom: 6px;
-      }
-      .footer-meta { font-size: 0.8rem; color: rgba(255,255,255,0.28); }
+      .footer-meta { font-size: 0.8rem; color: rgba(255,255,255,0.32); }
       .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
       .footer-link {
         font-size: 0.875rem;
-        color: rgba(255,255,255,0.42);
+        color: rgba(255,255,255,0.45);
         transition: color 0.15s;
       }
       .footer-link:hover { color: #fff; }
@@ -838,6 +872,7 @@
         .closing { min-height: 70vh; }
         .closing-content { padding: 100px 20px; }
 
+        .footer-brand { padding: 56px 20px 40px; }
         .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
         .hero-ctas { flex-direction: column; align-items: stretch; }
         .btn-hero-primary, .btn-hero-ghost { justify-content: center; text-align: center; }
@@ -850,6 +885,21 @@
         .pourquoi-deco-photo { width: 35%; left: -40px; }
         .contact-inner { gap: 56px; }
         .t-step:nth-child(2) { padding-left: 20px; }
+      }
+
+      /* Écrans larges : on élargit le conteneur pour que le contenu
+         reste ancré et ne « flotte » pas au centre, et on cale la
+         photo hero au bord du contenu plutôt qu'au bord de l'écran. */
+      @media (min-width: 1600px) {
+        :root { --max-w: 1480px; }
+      }
+      @media (min-width: 1920px) {
+        :root { --max-w: 1680px; }
+        .hero-photo-wrap { width: 54%; }
+      }
+      @media (min-width: 2400px) {
+        :root { --max-w: 1840px; }
+        .hero-photo-wrap { width: 50%; }
       }
     </style>
   </head>
@@ -1177,12 +1227,12 @@
 
     <!-- FOOTER ───────────────────────────────────────── -->
     <footer class="footer" role="contentinfo">
+      <div class="footer-brand">
+        <img src="/logo.svg" alt="R&C Advisory" class="footer-logo-big" />
+      </div>
       <div class="wrap">
         <div class="footer-inner">
-          <div>
-            <img src="/logo.svg" alt="R&C Advisory" class="footer-logo-img" height="36" />
-            <div class="footer-meta">Expert-comptable agréé à Bruxelles</div>
-          </div>
+          <div class="footer-meta">Expert-comptable agréé à Bruxelles</div>
           <div class="footer-links">
             <a href="mailto:ricardo@rcadvisory.be?subject=Demande%20de%20rendez-vous%20R%26C%20Advisory" class="footer-link">
               ricardo@rcadvisory.be
