@@ -157,7 +157,7 @@
         width: 100%; height: 100%;
         object-fit: cover;
         object-position: right center;
-        filter: brightness(0.95) contrast(1.02);
+        filter: brightness(0.72) contrast(1.04) saturate(0.88);
       }
       .hero-photo-wrap::before {
         content: '';
@@ -165,9 +165,9 @@
         background: linear-gradient(
           to right,
           var(--dark) 0%,
-          rgba(14,11,7,0.75) 30%,
-          rgba(14,11,7,0.2) 60%,
-          transparent 100%
+          rgba(14,11,7,0.8) 32%,
+          rgba(14,11,7,0.38) 62%,
+          rgba(14,11,7,0.12) 100%
         );
         z-index: 2;
       }
@@ -700,8 +700,8 @@
       .closing-photo img {
         width: 100%; height: 100%;
         object-fit: cover;
-        object-position: center 55%;
-        filter: brightness(0.55) saturate(0.95);
+        object-position: center 40%;
+        filter: brightness(0.62) saturate(1);
       }
       /* Dégradé bottom-only : fusion avec le footer */
       .closing-photo::after {
@@ -766,36 +766,18 @@
       .btn-closing:active { transform: scale(0.98); }
 
       /* ────────────────────────────────────────────────
-         FOOTER — structuré, logo à gauche, image fondue
+         FOOTER — dégradé de couleur qui prolonge la photo
       ──────────────────────────────────────────────── */
       .footer {
         position: relative;
-        background: var(--dark);
         border-top: none;
         overflow: hidden;
         padding: 88px 0 40px;
-      }
-      /* Photo de Bruxelles fondue depuis le haut, teintée ambre à gauche */
-      .footer::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 60%;
-        background-image: url('/brussels-grand-place.jpg');
-        background-size: cover;
-        background-position: center 40%;
-        opacity: 0.16;
-        -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-        mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-        pointer-events: none;
-      }
-      .footer::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0;
-        width: 70%; height: 55%;
-        background: radial-gradient(ellipse 80% 100% at 15% 0%, rgba(240,130,28,0.16) 0%, transparent 70%);
-        pointer-events: none;
+        /* Dégradé chaud qui reprend la lumière du ciel de la photo
+           au-dessus, puis fond vers le dark. Pas d'image de fond. */
+        background:
+          radial-gradient(ellipse 65% 90% at 12% 0%, rgba(240,130,28,0.22) 0%, transparent 60%),
+          linear-gradient(to bottom, #1E140B 0%, #130D07 45%, var(--dark) 100%);
       }
 
       .footer-top {
@@ -807,9 +789,8 @@
         padding-bottom: 72px;
       }
       .footer-logo {
-        width: 220px;
+        width: 230px;
         height: auto;
-        filter: brightness(0) invert(1);
         margin-bottom: 20px;
       }
       .footer-tagline {
@@ -968,8 +949,8 @@
           Expert-comptable à Bruxelles
         </div>
         <h1 class="hero-title" id="hero-title">
-          <span class="line">La comptabilité,</span>
-          <span class="line"><em>bien faite.</em></span>
+          <span class="line">Votre comptabilité</span>
+          <span class="line"><em>simplifiée.</em></span>
         </h1>
         <p class="hero-sub">
           R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives. Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
@@ -1233,13 +1214,13 @@
 
     <!-- CLOSING ──────────────────────────────────────── -->
     <section class="closing" id="closing" aria-labelledby="closing-title">
-      <!-- Grand-Place de Bruxelles de nuit — photo Steve Knight, CC BY 2.0, Wikimedia Commons -->
+      <!-- Skyline de Bruxelles au lever du jour (Palais de Justice) -->
       <div class="closing-photo" id="closing-photo" aria-hidden="true">
         <img
-          src="/brussels-grand-place.jpg"
+          src="/brussels-skyline.jpg"
           alt=""
           loading="lazy"
-          width="1920" height="1382"
+          width="2166" height="726"
         />
       </div>
       <div class="closing-content">
@@ -1260,7 +1241,7 @@
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand-col">
-            <img src="/logo.svg" alt="R&C Advisory" class="footer-logo" />
+            <img src="/logo-footer.svg" alt="R&C Advisory" class="footer-logo" />
             <p class="footer-tagline">Votre comptabilité, votre fiscalité et votre accompagnement, réunis chez un seul interlocuteur.</p>
           </div>
           <div class="footer-col">
