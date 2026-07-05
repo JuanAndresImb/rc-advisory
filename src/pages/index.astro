@@ -1,6 +1,6 @@
 ---
-// R&C Advisory — Page vitrine single-page v3
-// Palette : forest green (remplace le bleu), photos Unsplash intégrées à la Floria
+// R&C Advisory — Page vitrine single-page v4
+// Palette : orange/ambre (couleurs logo), photos Unsplash, copy PDF appliqué
 ---
 
 <!doctype html>
@@ -8,31 +8,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="R&C Advisory — Expert-comptable 100% digital à Bruxelles. Comptabilité, conseil fiscal et accompagnement personnalisé pour indépendants et PME en Belgique." />
+    <meta name="description" content="R&C Advisory — Expert-comptable 100% digital à Bruxelles. Comptabilité, fiscalité et accompagnement personnalisé pour indépendants et PME en Belgique." />
     <title>R&C Advisory — Expert-comptable digital à Bruxelles</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Preload des images critiques -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&h=1100&q=80" />
 
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-      /* ── Tokens : forest green, fini le bleu ── */
+      /* ── Tokens : palette orange/ambre du logo ── */
       :root {
-        --bg:           #F7F9F7;
+        --bg:           #F8F6F2;
         --surface:      #FFFFFF;
-        --dark:         #070E08;        /* near-black, légèrement vert forêt */
-        --dark-mid:     #0C1A0D;        /* vert forêt profond */
-        --text:         #0F1A0F;
-        --muted:        #6B7560;
-        --accent:       #10B981;        /* emerald-500 */
-        --accent-dk:    #059669;        /* emerald-600 */
-        --accent-deep:  #064E3B;        /* emerald-900 */
-        --accent-pale:  #ECFDF5;        /* emerald-50 */
-        --border:       rgba(15,26,15,0.09);
+        --dark:         #0E0B07;
+        --dark-mid:     #160F08;
+        --text:         #1A1108;
+        --muted:        #6B6257;
+        --accent:       #F0821C;
+        --accent-dk:    #C66A0F;
+        --accent-deep:  #1F0F04;
+        --accent-pale:  #FEF0E0;
+        --border:       rgba(26,17,8,0.09);
         --border-dark:  rgba(255,255,255,0.08);
         --font:         'Outfit', system-ui, sans-serif;
         --max-w:        1280px;
@@ -62,7 +61,7 @@
       }
 
       /* ────────────────────────────────────────────────
-         NAV — transparent sur hero, clair ensuite
+         NAV
       ──────────────────────────────────────────────── */
       .nav {
         position: fixed;
@@ -76,7 +75,7 @@
         transition: background 0.4s ease, border-color 0.4s ease;
       }
       .nav.nav--light {
-        background: rgba(247,249,247,0.92);
+        background: rgba(248,246,242,0.94);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border-bottom-color: var(--border);
@@ -87,15 +86,18 @@
         align-items: center;
         justify-content: space-between;
       }
-      .nav-logo {
-        font-size: 1.1rem;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        color: #fff;
-        transition: color 0.4s ease;
+
+      /* Logo SVG : blanc sur dark hero, couleurs réelles sur nav clair */
+      .nav-logo-img {
+        height: 40px;
+        width: auto;
+        filter: brightness(0) invert(1);
+        transition: filter 0.4s ease;
       }
-      .nav--light .nav-logo { color: var(--text); }
-      .nav-logo span { color: var(--accent); }
+      .nav--light .nav-logo-img {
+        filter: none;
+      }
+
       .btn-nav {
         padding: 10px 22px;
         border-radius: var(--r-btn);
@@ -120,7 +122,7 @@
       .btn-nav:active { transform: scale(0.97); }
 
       /* ────────────────────────────────────────────────
-         HERO — photo qui émerge de l'obscurité (Floria)
+         HERO
       ──────────────────────────────────────────────── */
       .hero {
         position: relative;
@@ -133,50 +135,41 @@
         z-index: 10;
       }
 
-      /* Dot grid */
       .hero::before {
         content: '';
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(rgba(16,185,129,0.06) 1px, transparent 1px);
+        background-image: radial-gradient(rgba(240,130,28,0.055) 1px, transparent 1px);
         background-size: 40px 40px;
         pointer-events: none;
         z-index: 0;
       }
 
-      /* Photo portrait — droit, émerge du noir comme Floria */
       .hero-photo-wrap {
         position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
-        width: 52%;
+        top: 0; right: 0;
+        height: 100%; width: 52%;
         pointer-events: none;
         z-index: 1;
       }
       .hero-photo-wrap img {
-        width: 100%;
-        height: 100%;
+        width: 100%; height: 100%;
         object-fit: cover;
         object-position: center top;
-        display: block;
         filter: brightness(0.82) contrast(1.05);
       }
-      /* Masque gradient : fondu vers le texte à gauche */
       .hero-photo-wrap::before {
         content: '';
-        position: absolute;
-        inset: 0;
+        position: absolute; inset: 0;
         background: linear-gradient(
           to right,
           var(--dark) 0%,
-          rgba(7,14,8,0.75) 30%,
-          rgba(7,14,8,0.2) 60%,
+          rgba(14,11,7,0.75) 30%,
+          rgba(14,11,7,0.2) 60%,
           transparent 100%
         );
         z-index: 2;
       }
-      /* Fondu bas */
       .hero-photo-wrap::after {
         content: '';
         position: absolute;
@@ -186,7 +179,6 @@
         z-index: 2;
       }
 
-      /* Fondue hero → section claire */
       .hero-bottom-fade {
         position: absolute;
         bottom: 0; left: 0; right: 0;
@@ -242,10 +234,10 @@
       }
 
       .hero-sub {
-        font-size: clamp(1rem, 1.4vw, 1.125rem);
-        color: rgba(255,255,255,0.5);
-        line-height: 1.72;
-        max-width: 40ch;
+        font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+        color: rgba(255,255,255,0.48);
+        line-height: 1.76;
+        max-width: 46ch;
         margin-bottom: 40px;
       }
 
@@ -265,7 +257,6 @@
         font-weight: 700;
         border: none;
         cursor: pointer;
-        white-space: nowrap;
         transition: background 0.18s, transform 0.12s;
       }
       .btn-hero-primary:hover { background: rgba(255,255,255,0.92); }
@@ -281,7 +272,6 @@
         font-weight: 500;
         border: 1px solid rgba(255,255,255,0.16);
         cursor: pointer;
-        white-space: nowrap;
         transition: border-color 0.18s, color 0.18s, background 0.18s, transform 0.12s;
       }
       .btn-hero-ghost:hover {
@@ -291,7 +281,6 @@
       }
       .btn-hero-ghost:active { transform: scale(0.98); }
 
-      /* Stats */
       .hero-stats {
         display: flex;
         gap: 48px;
@@ -314,6 +303,15 @@
         color: rgba(255,255,255,0.38);
         line-height: 1.45;
         max-width: 16ch;
+      }
+      /* 4e stat textuelle */
+      .stat-badge {
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--accent);
+        line-height: 1;
+        margin-bottom: 5px;
       }
 
       /* ── Reveal animations ── */
@@ -344,13 +342,11 @@
       .d4 { transition-delay: 0.28s; }
 
       @media (prefers-reduced-motion: reduce) {
-        .reveal, .reveal-scale, .reveal-x {
-          opacity: 1; transform: none; transition: none;
-        }
+        .reveal, .reveal-scale, .reveal-x { opacity: 1; transform: none; transition: none; }
       }
 
       /* ────────────────────────────────────────────────
-         SERVICES — bento photo + couleur (style Floria archives)
+         SERVICES — bento 4 tuiles
       ──────────────────────────────────────────────── */
       .services {
         position: relative;
@@ -380,7 +376,6 @@
         line-height: 1.65;
       }
 
-      /* Bento 4 tuiles asymétriques */
       .bento {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
@@ -397,19 +392,13 @@
       }
       .bento-tile:hover { transform: translateY(-5px); }
 
-      /* Tile 1 : 100% Digital — IMAGE + overlay sombre vert */
       .tile-1 { grid-column: 1 / 8; grid-row: 1; }
-      /* Tile 2 : Expertise-comptable — couleur vert profond */
       .tile-2 { grid-column: 8 / 13; grid-row: 1; background: var(--accent-deep); }
-      /* Tile 3 : Conseil fiscal — accent emerald */
-      .tile-3 { grid-column: 1 / 5; grid-row: 2; background: var(--accent); }
-      /* Tile 4 : Accompagnement — IMAGE + overlay */
+      .tile-3 { grid-column: 1 / 5; grid-row: 2; background: #B5540A; }
       .tile-4 { grid-column: 5 / 13; grid-row: 2; }
 
-      /* Image de fond pour tiles photo */
       .tile-img {
-        position: absolute;
-        inset: 0;
+        position: absolute; inset: 0;
         width: 100%; height: 100%;
         object-fit: cover;
         object-position: center;
@@ -418,23 +407,14 @@
       }
       .bento-tile:hover .tile-img { transform: scale(1.06); }
 
-      /* Overlay gradient sombre */
       .tile-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to top,
-          rgba(7,14,8,0.80) 0%,
-          rgba(7,14,8,0.30) 55%,
-          transparent 100%
-        );
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(14,11,7,0.82) 0%, rgba(14,11,7,0.32) 55%, transparent 100%);
         z-index: 1;
       }
 
-      /* Contenu des tuiles */
       .tile-content {
-        position: absolute;
-        inset: 0;
+        position: absolute; inset: 0;
         padding: 28px 32px;
         display: flex;
         flex-direction: column;
@@ -465,7 +445,6 @@
       .tile-2 .tag-dot { background: rgba(255,255,255,0.3); }
       .tile-3 .tag-dot { background: rgba(255,255,255,0.7); }
 
-      .tile-bottom {}
       .tile-name {
         font-size: clamp(1.1rem, 1.8vw, 1.5rem);
         font-weight: 700;
@@ -491,7 +470,7 @@
       .tile-2 .tile-desc { color: rgba(255,255,255,0.55); }
       .tile-3 .tile-desc { color: rgba(255,255,255,0.75); }
 
-      /* Filigrane décoratif sur tile-1 */
+      /* Filigrane décoratif */
       .tile-1::after {
         content: '100%';
         position: absolute;
@@ -500,30 +479,27 @@
         font-weight: 800;
         letter-spacing: -0.06em;
         line-height: 1;
-        color: rgba(16,185,129,0.1);
+        color: rgba(240,130,28,0.12);
         pointer-events: none;
         user-select: none;
         z-index: 3;
       }
 
       /* ────────────────────────────────────────────────
-         POURQUOI — dark forêt, photo déco gauche + timeline
+         POURQUOI — dark ambre, photo déco + timeline 4 étapes
       ──────────────────────────────────────────────── */
       .pourquoi {
         position: relative;
         background: var(--dark-mid);
-        padding: 120px 0 120px;
+        padding: 120px 0;
         overflow: hidden;
         z-index: 10;
       }
 
-      /* Photo architecturale décorative gauche (comme Floria) */
       .pourquoi-deco-photo {
         position: absolute;
-        left: -80px;
-        top: -60px;
-        width: 42%;
-        max-width: 600px;
+        left: -80px; top: -60px;
+        width: 42%; max-width: 600px;
         pointer-events: none;
         z-index: 0;
         -webkit-mask-image: radial-gradient(ellipse 80% 80% at 20% 50%, black 25%, transparent 75%);
@@ -534,14 +510,11 @@
       }
       .pourquoi-deco-photo.visible { opacity: 0.18; transform: translateX(0); }
       .pourquoi-deco-photo img {
-        width: 100%;
-        height: auto;
-        object-fit: contain;
+        width: 100%; height: auto;
         mix-blend-mode: luminosity;
         filter: contrast(1.1);
       }
 
-      /* Blob radial subtil */
       .pourquoi::before {
         content: '';
         position: absolute;
@@ -550,7 +523,7 @@
         width: 70vw; height: 70vw;
         max-width: 1000px; max-height: 1000px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(16,185,129,0.04) 0%, transparent 60%);
+        background: radial-gradient(circle, rgba(240,130,28,0.05) 0%, transparent 60%);
         pointer-events: none;
         z-index: 0;
       }
@@ -581,7 +554,6 @@
         margin-bottom: 18px;
       }
 
-      /* Timeline numérotée */
       .timeline {
         border-left: 1px solid var(--border-dark);
         padding-left: 56px;
@@ -590,16 +562,15 @@
       }
       .t-step {
         position: relative;
-        padding-bottom: 56px;
+        padding-bottom: 52px;
       }
       .t-step:last-child { padding-bottom: 0; }
       .t-step:nth-child(2) { padding-left: 40px; }
 
       .t-num {
         position: absolute;
-        left: -56px;
-        top: 0;
-        margin-left: -20px; /* centré sur la bordure */
+        left: -56px; top: 0;
+        margin-left: -20px;
         width: 40px; height: 40px;
         border-radius: 50%;
         background: var(--dark-mid);
@@ -614,7 +585,7 @@
         font-feature-settings: 'tnum';
       }
       .t-title {
-        font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+        font-size: clamp(1rem, 1.8vw, 1.25rem);
         font-weight: 700;
         letter-spacing: -0.02em;
         color: #fff;
@@ -655,7 +626,7 @@
         font-size: 1rem;
         color: var(--muted);
         line-height: 1.72;
-        max-width: 42ch;
+        max-width: 44ch;
         margin-bottom: 14px;
       }
       .free-pill {
@@ -686,8 +657,8 @@
         cursor: pointer;
       }
       .contact-card:hover {
-        border-color: rgba(16,185,129,0.35);
-        box-shadow: 0 4px 20px rgba(16,185,129,0.08), 0 12px 40px rgba(0,0,0,0.06);
+        border-color: rgba(240,130,28,0.38);
+        box-shadow: 0 4px 20px rgba(240,130,28,0.09), 0 12px 40px rgba(0,0,0,0.05);
         transform: translateX(5px);
       }
       .contact-card:active { transform: translateX(2px) scale(0.995); }
@@ -735,14 +706,12 @@
         flex-wrap: wrap;
         gap: 24px;
       }
-      .footer-logo {
-        font-size: 1.5rem;
-        font-weight: 800;
-        letter-spacing: -0.04em;
-        color: #fff;
-        margin-bottom: 5px;
+      .footer-logo-img {
+        height: 36px;
+        width: auto;
+        filter: brightness(0) invert(1);
+        margin-bottom: 6px;
       }
-      .footer-logo span { color: var(--accent); }
       .footer-meta { font-size: 0.8rem; color: rgba(255,255,255,0.28); }
       .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
       .footer-link {
@@ -761,7 +730,7 @@
         .hero .wrap { padding-top: 44px; padding-bottom: 130px; }
         .hero-photo-wrap { width: 100%; opacity: 0.35; }
         .hero-photo-wrap::before {
-          background: linear-gradient(to right, var(--dark) 0%, rgba(7,14,8,0.8) 50%, rgba(7,14,8,0.6) 100%);
+          background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.6) 100%);
         }
         .hero-stats { gap: 24px; }
 
@@ -779,7 +748,7 @@
           min-height: 240px;
         }
         .tile-1::after { font-size: 110px; right: -4px; bottom: -20px; }
-        .tile-desc { opacity: 1; transform: none; } /* visible sur mobile */
+        .tile-desc { opacity: 1; transform: none; }
 
         .pourquoi { padding: 72px 0; }
         .pourquoi-deco-photo { display: none; }
@@ -799,10 +768,7 @@
 
       @media (min-width: 768px) and (max-width: 1023px) {
         .hero-photo-wrap { width: 60%; }
-        .bento {
-          grid-template-rows: 280px 220px;
-          gap: 12px;
-        }
+        .bento { grid-template-rows: 280px 220px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
         .pourquoi-deco-photo { width: 35%; left: -40px; }
         .contact-inner { gap: 56px; }
@@ -816,7 +782,9 @@
     <!-- NAV ──────────────────────────────────────────── -->
     <nav class="nav" id="nav" role="navigation" aria-label="Navigation principale">
       <div class="wrap">
-        <div class="nav-logo">R<span>&amp;</span>C Advisory</div>
+        <a href="/" aria-label="R&C Advisory — Accueil">
+          <img src="/logo.svg" alt="R&C Advisory" class="nav-logo-img" height="40" />
+        </a>
         <a href="#contact" class="btn-nav">Prendre rendez-vous</a>
       </div>
     </nav>
@@ -825,15 +793,13 @@
     <!-- HERO ─────────────────────────────────────────── -->
     <section class="hero" id="hero" aria-labelledby="hero-title">
 
-      <!-- Photo portrait professionnelle, émerge de l'obscurité -->
       <div class="hero-photo-wrap" aria-hidden="true">
         <img
           src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=920&h=1100&q=80"
           alt=""
           loading="eager"
           fetchpriority="high"
-          width="920"
-          height="1100"
+          width="920" height="1100"
         />
       </div>
 
@@ -842,14 +808,14 @@
       <div class="wrap">
         <div class="hero-eyebrow">
           <span class="eyebrow-dot" aria-hidden="true"></span>
-          Cabinet comptable · Bruxelles
+          Expert-Comptable · Bruxelles
         </div>
         <h1 class="hero-title" id="hero-title">
           La comptabilité,<br>
           <em>bien faite.</em>
         </h1>
         <p class="hero-sub">
-          R&amp;C Advisory gère vos comptes entièrement à distance. Pas de déplacement, pas de classeur en carton. Un interlocuteur unique qui connaît votre dossier.
+          R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives. Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
         </p>
         <div class="hero-ctas">
           <a href="#contact" class="btn-hero-primary">Prendre rendez-vous</a>
@@ -857,16 +823,20 @@
         </div>
         <div class="hero-stats">
           <div>
-            <div class="stat-num">10<span>+</span></div>
-            <div class="stat-label">ans d'expérience en Belgique</div>
+            <div class="stat-num">9<span>+</span></div>
+            <div class="stat-label">Ans d'expérience en comptabilité et fiscalité</div>
           </div>
           <div>
             <div class="stat-num">100<span>%</span></div>
-            <div class="stat-label">digital depuis le premier jour</div>
+            <div class="stat-label">Gestion digital de votre dossier</div>
           </div>
           <div>
             <div class="stat-num">1</div>
-            <div class="stat-label">interlocuteur unique, toujours le même</div>
+            <div class="stat-label">Interlocuteur unique dédié</div>
+          </div>
+          <div>
+            <div class="stat-badge">Sur Mesure</div>
+            <div class="stat-label">Accompagnement personnalisé pour chaque entreprise</div>
           </div>
         </div>
       </div>
@@ -887,7 +857,7 @@
 
         <div class="bento">
 
-          <!-- Tuile 1 : 100% Digital — image workspace + overlay -->
+          <!-- Tuile 1 : 100% Digital -->
           <div class="bento-tile tile-1 reveal-scale">
             <img
               class="tile-img"
@@ -900,44 +870,44 @@
             <div class="tile-content">
               <div class="tile-tag">
                 <span class="tag-dot" aria-hidden="true"></span>
-                Outils modernes
+                Création &amp; lancement
               </div>
-              <div class="tile-bottom">
+              <div>
                 <div class="tile-name">100% Digital</div>
-                <div class="tile-desc">Partage de documents en ligne, signature électronique, suivi en temps réel. Zéro paperasse, zéro déplacement.</div>
+                <div class="tile-desc">Choix de la structure, plan financier, constitution de société et formalités administratives. On vous accompagne depuis le début.</div>
               </div>
             </div>
           </div>
 
-          <!-- Tuile 2 : Expertise-comptable — vert profond -->
+          <!-- Tuile 2 : Comptabilité & fiscalité -->
           <div class="bento-tile tile-2 reveal-scale d1">
             <div class="tile-content">
               <div class="tile-tag">
                 <span class="tag-dot" aria-hidden="true"></span>
                 Comptabilité
               </div>
-              <div class="tile-bottom">
-                <div class="tile-name">Expertise-comptable</div>
-                <div class="tile-desc">Tenue des comptes, bilans, clôture annuelle. Vos obligations légales gérées dans les délais, sans que vous ayez à y penser.</div>
+              <div>
+                <div class="tile-name">Comptabilité &amp; fiscalité</div>
+                <div class="tile-desc">Gestion comptable, déclarations fiscales et suivi de l'ensemble de vos obligations. Vos échéances respectées, sans effort de votre côté.</div>
               </div>
             </div>
           </div>
 
-          <!-- Tuile 3 : Conseil fiscal — emerald -->
+          <!-- Tuile 3 : Pilotage & optimisation -->
           <div class="bento-tile tile-3 reveal-scale d2">
             <div class="tile-content">
               <div class="tile-tag">
                 <span class="tag-dot" aria-hidden="true"></span>
                 Fiscalité
               </div>
-              <div class="tile-bottom">
-                <div class="tile-name">Conseil fiscal</div>
-                <div class="tile-desc">Optimisation fiscale, déclarations IPP, ISOC et TVA. Vous payez ce que vous devez, pas plus.</div>
+              <div>
+                <div class="tile-name">Pilotage &amp; optimisation</div>
+                <div class="tile-desc">Analyse de vos chiffres, optimisation fiscale et accompagnement dans vos décisions stratégiques.</div>
               </div>
             </div>
           </div>
 
-          <!-- Tuile 4 : Accompagnement — image portrait + overlay -->
+          <!-- Tuile 4 : Accompagnement sur mesure -->
           <div class="bento-tile tile-4 reveal-scale d3">
             <img
               class="tile-img"
@@ -952,9 +922,9 @@
                 <span class="tag-dot" aria-hidden="true"></span>
                 Suivi personnalisé
               </div>
-              <div class="tile-bottom">
-                <div class="tile-name">Accompagnement personnalisé</div>
-                <div class="tile-desc">Un interlocuteur unique qui connaît votre activité, vos objectifs, votre situation. Pas un centre d'appel.</div>
+              <div>
+                <div class="tile-name">Accompagnement sur mesure</div>
+                <div class="tile-desc">Un interlocuteur unique qui vous accompagne à chaque étape du développement de votre entreprise.</div>
               </div>
             </div>
           </div>
@@ -967,7 +937,6 @@
     <!-- POURQUOI ──────────────────────────────────────── -->
     <section class="pourquoi" id="pourquoi" aria-labelledby="pourquoi-title">
 
-      <!-- Photo décorative gauche (Floria mix-blend technique) -->
       <div class="pourquoi-deco-photo reveal" aria-hidden="true">
         <img
           src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=700&h=900&q=65"
@@ -982,13 +951,13 @@
 
           <div class="pourquoi-left">
             <h2 class="section-title reveal-x" id="pourquoi-title">
-              L'architecture<br>d'une comptabilité<br>qui fonctionne.
+              Un partenaire<br>à chaque étape<br>de votre activité.
             </h2>
             <p class="reveal d1">
-              Ricardo Calderon a fondé R&amp;C Advisory avec un constat simple : la plupart des indépendants n'ont pas besoin d'un grand cabinet. Ils ont besoin d'un comptable qui répond vite, parle clairement, et connaît leur dossier sur le bout des doigts.
+              Créer une entreprise, gérer sa comptabilité, optimiser sa fiscalité ou prendre les bonnes décisions au bon moment : chaque étape présente ses défis.
             </p>
             <p class="reveal d2">
-              Dix ans de terrain en Belgique, des clients dans des secteurs très différents, une conviction : la comptabilité n'a pas à être une source de stress.
+              Chez R&amp;C Advisory, nous accompagnons les entrepreneurs tout au long de leur parcours avec une approche moderne, réactive et entièrement digitalisée. Grâce à plus de 9 ans d'expérience en Belgique, vous bénéficiez de l'expertise d'un cabinet structuré tout en conservant la proximité et le suivi personnalisé d'un interlocuteur unique. Notre objectif est simple&nbsp;: vous permettre de vous concentrer sur votre activité pendant que nous nous occupons du reste.
             </p>
           </div>
 
@@ -996,25 +965,33 @@
 
             <div class="t-step reveal" role="listitem">
               <div class="t-num" aria-hidden="true">01</div>
-              <h3 class="t-title">100% digital depuis le début</h3>
+              <h3 class="t-title">Création &amp; lancement</h3>
               <p class="t-text">
-                Pas de transition à prévoir. Vous partagez vos documents via une plateforme sécurisée, signez en ligne, suivez vos deadlines depuis votre téléphone. C'est ainsi depuis le premier jour.
+                Choix de la structure, plan financier, constitution de société et formalités administratives.
               </p>
             </div>
 
             <div class="t-step reveal d1" role="listitem">
               <div class="t-num" aria-hidden="true">02</div>
-              <h3 class="t-title">Un seul interlocuteur, toujours disponible</h3>
+              <h3 class="t-title">Comptabilité &amp; fiscalité</h3>
               <p class="t-text">
-                Quand vous écrivez, c'est Ricardo qui répond. Pas un assistant, pas un stagiaire. Il connaît votre dossier et peut vous répondre concrètement, sans avoir à chercher qui vous êtes.
+                Gestion comptable, déclarations fiscales et suivi de l'ensemble de vos obligations.
               </p>
             </div>
 
             <div class="t-step reveal d2" role="listitem">
               <div class="t-num" aria-hidden="true">03</div>
-              <h3 class="t-title">Transparent sur les honoraires</h3>
+              <h3 class="t-title">Pilotage &amp; optimisation</h3>
               <p class="t-text">
-                Le prix est fixé en début de collaboration et ne change pas sans discussion. Vous savez ce que vous payez et pourquoi.
+                Analyse de vos chiffres, optimisation fiscale et accompagnement dans vos décisions stratégiques.
+              </p>
+            </div>
+
+            <div class="t-step reveal d3" role="listitem">
+              <div class="t-num" aria-hidden="true">04</div>
+              <h3 class="t-title">Accompagnement sur mesure</h3>
+              <p class="t-text">
+                Un interlocuteur unique qui vous accompagne à chaque étape du développement de votre entreprise.
               </p>
             </div>
 
@@ -1035,12 +1012,15 @@
               Parlons de<br>votre situation.
             </h2>
             <p class="reveal d1">
-              Le premier entretien est gratuit, sans engagement. Vous expliquez votre activité, vos besoins, vos questions. Ricardo vous dit clairement ce qu'il peut faire pour vous, et à quel coût.
+              Que vous soyez en phase de création, indépendant ou dirigeant d'une société, prenons le temps d'échanger sur vos besoins et vos objectifs.
             </p>
             <p class="reveal d2">
-              Pas de jargon, pas de présentation commerciale. Juste une conversation utile.
+              Chez R&amp;C Advisory, vous bénéficiez d'un accompagnement personnalisé, d'une gestion 100&nbsp;% digitale et d'un interlocuteur unique qui connaît réellement votre dossier.
             </p>
-            <span class="free-pill reveal d3">Premier entretien offert</span>
+            <p class="reveal d3">
+              Le premier entretien est gratuit et sans engagement. L'occasion de découvrir comment nous pouvons vous aider à piloter votre activité en toute sérénité.
+            </p>
+            <span class="free-pill reveal d4">Premier entretien offert</span>
           </div>
 
           <div class="contact-cards">
@@ -1096,7 +1076,7 @@
       <div class="wrap">
         <div class="footer-inner">
           <div>
-            <div class="footer-logo">R<span>&amp;</span>C Advisory</div>
+            <img src="/logo.svg" alt="R&C Advisory" class="footer-logo-img" height="36" />
             <div class="footer-meta">Expert-comptable · Bruxelles · Belgique</div>
           </div>
           <div class="footer-links">
@@ -1113,12 +1093,12 @@
 
 
     <script>
-      // Nav dark/light via IntersectionObserver
       const nav  = document.getElementById('nav');
       const hero = document.getElementById('hero');
       if (nav && hero) {
         const sentinel = document.createElement('div');
-        sentinel.style.cssText = 'position:absolute;bottom:0;height:1px;width:100%;pointer-events:none;';
+        /* Sentinel juste en-dessous du viewport initial : nav light dès que l'on quitte le hero */
+        sentinel.style.cssText = `position:absolute;top:${window.innerHeight - 1}px;height:1px;width:100%;pointer-events:none;`;
         hero.style.position = 'relative';
         hero.appendChild(sentinel);
         new IntersectionObserver(
@@ -1127,7 +1107,6 @@
         ).observe(sentinel);
       }
 
-      // Scroll reveals
       const obs = new IntersectionObserver(
         (entries) => entries.forEach(e => {
           if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
