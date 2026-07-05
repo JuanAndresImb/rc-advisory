@@ -170,20 +170,22 @@
         );
         z-index: 2;
       }
-      .hero-photo-wrap::after {
-        content: '';
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        height: 35%;
-        background: linear-gradient(to top, var(--dark), transparent);
-        z-index: 2;
-      }
-
+      /* Un seul fondu bas, plein cadre : la photo sombre d'abord vers le
+         dark, puis le dark glisse vers le fond clair de la page. Les stops
+         intermédiaires évitent la bande « cassée » entre les deux couleurs. */
       .hero-bottom-fade {
         position: absolute;
         bottom: 0; left: 0; right: 0;
-        height: 160px;
-        background: linear-gradient(to top, var(--bg), transparent);
+        height: 42vh;
+        background: linear-gradient(
+          to top,
+          var(--bg) 0%,
+          var(--bg) 4%,
+          rgba(14,11,7,0.97) 34%,
+          rgba(14,11,7,0.72) 50%,
+          rgba(14,11,7,0.32) 70%,
+          transparent 100%
+        );
         pointer-events: none;
         z-index: 5;
       }
@@ -600,9 +602,9 @@
       }
       .contact-inner {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
-        align-items: start;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 64px;
+        align-items: center;
       }
       .contact-section-label {
         font-size: 0.72rem;
@@ -682,6 +684,180 @@
         flex-shrink: 0;
       }
       .contact-card:hover .c-caret { transform: translateX(4px); }
+
+      /* Panneau CTA (colonne droite) : carte sombre chaude, dans l'esprit
+         des tuiles bento, qui met en valeur la prise de rendez-vous. */
+      .contact-panel {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--r-2xl);
+        padding: 52px 44px;
+        background: linear-gradient(158deg, #241812 0%, var(--dark) 72%);
+        color: #fff;
+      }
+      .contact-panel::before {
+        content: '';
+        position: absolute;
+        top: -35%; right: -12%;
+        width: 65%; height: 90%;
+        background: radial-gradient(circle, rgba(240,130,28,0.22) 0%, transparent 66%);
+        pointer-events: none;
+      }
+      /* Monogramme filigrane */
+      .contact-panel::after {
+        content: '&';
+        position: absolute;
+        right: -6px; bottom: -48px;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 220px;
+        line-height: 1;
+        color: rgba(255,255,255,0.04);
+        pointer-events: none;
+      }
+      .panel-content { position: relative; z-index: 1; }
+      .panel-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 18px;
+      }
+      .panel-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 2.3vw, 2rem);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.12;
+        margin-bottom: 14px;
+      }
+      .panel-text {
+        color: rgba(255,255,255,0.55);
+        font-size: 0.95rem;
+        line-height: 1.62;
+        max-width: 32ch;
+        margin-bottom: 30px;
+      }
+      .btn-panel {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 32px;
+        border-radius: var(--r-btn);
+        background: var(--accent);
+        color: #fff;
+        font-family: var(--font);
+        font-size: 0.95rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: background 0.18s, transform 0.12s;
+      }
+      .btn-panel:hover { background: var(--accent-dk); }
+      .btn-panel:active { transform: scale(0.98); }
+      .btn-panel svg { transition: transform 0.2s ease; }
+      .btn-panel:hover svg { transform: translateX(3px); }
+      .panel-reassure {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 22px;
+        margin-top: 26px;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.42);
+      }
+      .panel-reassure span { display: inline-flex; align-items: center; gap: 7px; }
+      .panel-reassure .rmark {
+        width: 8px; height: 10px;
+        background: var(--accent);
+        clip-path: polygon(38% 0, 100% 0, 62% 100%, 0 100%);
+        flex-shrink: 0;
+      }
+
+      /* ────────────────────────────────────────────────
+         MODALE CONTACT — email + WhatsApp dans un pop-up
+      ──────────────────────────────────────────────── */
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .modal:target, .modal.is-open { display: flex; }
+      .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(10,8,5,0.62);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+      }
+      .modal-card {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 440px;
+        background: var(--surface);
+        border-radius: var(--r-2xl);
+        padding: 40px 32px 32px;
+        box-shadow: 0 30px 90px rgba(0,0,0,0.4);
+      }
+      .modal.is-open .modal-card { animation: modalIn 0.4s cubic-bezier(0.16,1,0.3,1); }
+      @keyframes modalIn {
+        from { opacity: 0; transform: translateY(16px) scale(0.97); }
+        to   { opacity: 1; transform: none; }
+      }
+      .modal-close {
+        position: absolute;
+        top: 16px; right: 16px;
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: var(--bg);
+        color: var(--muted);
+        font-size: 1.35rem;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.18s, color 0.18s;
+      }
+      .modal-close:hover { background: var(--accent-pale); color: var(--accent-dk); }
+      .modal-eyebrow {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent-dk);
+        margin-bottom: 12px;
+      }
+      .modal-title {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+      .modal-sub {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.55;
+        margin-bottom: 26px;
+      }
+      .modal-options { display: flex; flex-direction: column; gap: 12px; }
+      .modal-options .contact-card:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-color: rgba(240,130,28,0.5);
+      }
 
       /* ────────────────────────────────────────────────
          CLOSING — dark, photo émotionnelle, fusion footer
@@ -936,7 +1112,7 @@
         <a href="/" aria-label="R&C Advisory, retour en haut de page">
           <img src="/logo.svg" alt="R&C Advisory" class="nav-logo-img" height="40" />
         </a>
-        <a href="#contact" class="btn-nav">Prendre rendez-vous</a>
+        <a href="#contact-modal" class="btn-nav" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">Prendre rendez-vous</a>
       </div>
     </nav>
 
@@ -970,7 +1146,7 @@
           Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
         </p>
         <div class="hero-ctas">
-          <a href="#contact" class="btn-hero-primary">Prendre rendez-vous</a>
+          <a href="#contact-modal" class="btn-hero-primary" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">Prendre rendez-vous</a>
           <a href="#services" class="btn-hero-ghost">Voir les services</a>
         </div>
         <div class="hero-stats">
@@ -1180,54 +1356,84 @@
             <span class="free-pill" data-anim="fade-up">Premier entretien offert</span>
           </div>
 
-          <div class="contact-cards">
-            <a
-              href="mailto:ricardo@rcadvisory.be?subject=Demande%20de%20rendez-vous%20R%26C%20Advisory"
-              class="contact-card"
-              data-anim="fade-up"
-              aria-label="Envoyer un email à Ricardo Calderon"
-            >
-              <div class="c-icon c-icon-email" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
+          <div class="contact-panel" data-anim="fade-up">
+            <div class="panel-content">
+              <div class="panel-label">
+                <span class="rmark" aria-hidden="true"></span>
+                Rendez-vous
               </div>
-              <div>
-                <div class="c-label">Par email</div>
-                <div class="c-value">ricardo@rcadvisory.be</div>
+              <div class="panel-title">Réservez votre premier échange.</div>
+              <p class="panel-text">
+                Choisissez le moment qui vous convient. On fait le point sur votre situation, sans engagement.
+              </p>
+              <a href="#contact-modal" class="btn-panel" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">
+                Prendre rendez-vous
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+              <div class="panel-reassure">
+                <span><span class="rmark" aria-hidden="true"></span>Premier entretien offert</span>
+                <span><span class="rmark" aria-hidden="true"></span>Sans engagement</span>
               </div>
-              <div class="c-caret" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </div>
-            </a>
-
-            <a
-              href="https://wa.me/32495934562?text=Bonjour%20Ricardo%2C%20je%20souhaite%20prendre%20rendez-vous."
-              class="contact-card"
-              data-anim="fade-up"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Contacter via WhatsApp"
-            >
-              <div class="c-icon c-icon-wa" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C6.48 2 2 6.48 2 12c0 1.9.52 3.68 1.43 5.21L2 22l4.9-1.41C8.35 21.5 10.13 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.98 14.01c-.21.59-1.22 1.13-1.68 1.2-.43.06-.98.09-1.58-.1-.36-.12-.83-.27-1.43-.53-2.5-1.08-4.14-3.6-4.27-3.77-.12-.17-.99-1.32-.99-2.52 0-1.2.63-1.79.85-2.04.22-.25.48-.31.64-.31l.46.01c.15.01.35-.06.54.41.21.5.72 1.74.78 1.87.06.13.1.27.02.44-.08.17-.12.27-.24.42-.12.15-.25.33-.36.44-.12.12-.25.25-.11.49.15.24.65 1.07 1.39 1.73.95.85 1.75 1.11 2 1.23.24.12.38.1.52-.06.14-.17.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.57-.15 1.16z" fill="#16A34A"/>
-                </svg>
-              </div>
-              <div>
-                <div class="c-label">Via WhatsApp</div>
-                <div class="c-value">+32 495 93 45 62</div>
-              </div>
-              <div class="c-caret" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </div>
-            </a>
+            </div>
           </div>
 
         </div>
       </div>
     </section>
+
+
+    <!-- MODALE CONTACT ────────────────────────────────── -->
+    <div class="modal" id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+      <a href="#contact" class="modal-backdrop" data-modal-close tabindex="-1" aria-hidden="true"></a>
+      <div class="modal-card" role="document">
+        <a href="#contact" class="modal-close" data-modal-close aria-label="Fermer">&times;</a>
+        <div class="modal-eyebrow">Premier contact</div>
+        <h3 class="modal-title" id="modal-title">Comment souhaitez-vous échanger&nbsp;?</h3>
+        <p class="modal-sub">Écrivez-nous directement. Ricardo vous répond en personne.</p>
+        <div class="modal-options">
+          <a
+            href="mailto:ricardo@rcadvisory.be?subject=Demande%20de%20rendez-vous%20R%26C%20Advisory"
+            class="contact-card"
+            aria-label="Envoyer un email à Ricardo Calderon"
+          >
+            <div class="c-icon c-icon-email" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="c-label">Par email</div>
+              <div class="c-value">ricardo@rcadvisory.be</div>
+            </div>
+            <div class="c-caret" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </a>
+
+          <a
+            href="https://wa.me/32495934562?text=Bonjour%20Ricardo%2C%20je%20souhaite%20prendre%20rendez-vous."
+            class="contact-card"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Contacter via WhatsApp"
+          >
+            <div class="c-icon c-icon-wa" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.9.52 3.68 1.43 5.21L2 22l4.9-1.41C8.35 21.5 10.13 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.98 14.01c-.21.59-1.22 1.13-1.68 1.2-.43.06-.98.09-1.58-.1-.36-.12-.83-.27-1.43-.53-2.5-1.08-4.14-3.6-4.27-3.77-.12-.17-.99-1.32-.99-2.52 0-1.2.63-1.79.85-2.04.22-.25.48-.31.64-.31l.46.01c.15.01.35-.06.54.41.21.5.72 1.74.78 1.87.06.13.1.27.02.44-.08.17-.12.27-.24.42-.12.15-.25.33-.36.44-.12.12-.25.25-.11.49.15.24.65 1.07 1.39 1.73.95.85 1.75 1.11 2 1.23.24.12.38.1.52-.06.14-.17.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.57-.15 1.16z" fill="#16A34A"/>
+              </svg>
+            </div>
+            <div>
+              <div class="c-label">Via WhatsApp</div>
+              <div class="c-value">+32 495 93 45 62</div>
+            </div>
+            <div class="c-caret" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
 
 
     <!-- CLOSING ──────────────────────────────────────── -->
@@ -1249,7 +1455,7 @@
         <p class="closing-sub" data-anim="fade-up">
           Un premier échange suffit pour savoir si nous sommes le bon partenaire pour vous.
         </p>
-        <a href="#contact" class="btn-closing" data-anim="fade-up">Prendre rendez-vous</a>
+        <a href="#contact-modal" class="btn-closing" data-anim="fade-up" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">Prendre rendez-vous</a>
       </div>
     </section>
 
@@ -1309,6 +1515,45 @@
           ).observe(sentinel);
         }
 
+        /* ── Modale contact (email + WhatsApp) ── */
+        var modal = document.getElementById('contact-modal');
+        if (modal) {
+          var lastFocus = null;
+          var openModal = function () {
+            lastFocus = document.activeElement;
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            var first = modal.querySelector('.contact-card');
+            if (first) { first.focus(); }
+          };
+          var closeModal = function () {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            if (location.hash === '#contact-modal') {
+              history.replaceState(null, '', location.pathname + location.search);
+            }
+            if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
+          };
+          var openers = document.querySelectorAll('[data-modal-open]');
+          for (var m = 0; m < openers.length; m++) {
+            openers[m].addEventListener('click', function (e) { e.preventDefault(); openModal(); });
+          }
+          var closers = modal.querySelectorAll('[data-modal-close]');
+          for (var n = 0; n < closers.length; n++) {
+            closers[n].addEventListener('click', function (e) { e.preventDefault(); closeModal(); });
+          }
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.classList.contains('is-open')) { closeModal(); }
+          });
+          /* Une option choisie ferme la modale */
+          var opts = modal.querySelectorAll('.contact-card');
+          for (var o = 0; o < opts.length; o++) {
+            opts[o].addEventListener('click', function () { setTimeout(closeModal, 60); });
+          }
+        }
+
         if (!hasGsap || reduceMotion) { return; }
 
         gsap.registerPlugin(ScrollTrigger);
@@ -1324,11 +1569,14 @@
           gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
           gsap.ticker.lagSmoothing(0);
 
-          /* Ancres internes via Lenis */
+          /* Ancres internes via Lenis (on ignore les déclencheurs de modale) */
           var anchors = document.querySelectorAll('a[href^="#"]');
           for (var i = 0; i < anchors.length; i++) {
+            if (anchors[i].hasAttribute('data-modal-open') || anchors[i].hasAttribute('data-modal-close')) { continue; }
             anchors[i].addEventListener('click', function (e) {
-              var target = document.querySelector(this.getAttribute('href'));
+              var href = this.getAttribute('href');
+              if (href === '#' || href === '#contact-modal') { return; }
+              var target = document.querySelector(href);
               if (target) {
                 e.preventDefault();
                 lenis.scrollTo(target, { offset: -72 });
