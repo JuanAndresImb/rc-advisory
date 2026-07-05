@@ -1,6 +1,7 @@
 ---
-// R&C Advisory — Page vitrine single-page v4
-// Palette : orange/ambre (couleurs logo), photos Unsplash, copy PDF appliqué
+// R&C Advisory — Page vitrine single-page v5
+// Palette orange/ambre (logo), Fraunces + Plus Jakarta Sans,
+// Lenis smooth scroll + GSAP/ScrollTrigger, closing dark fusionné au footer
 ---
 
 <!doctype html>
@@ -17,7 +18,7 @@
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&h=1100&q=80" />
 
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
       /* ── Tokens : palette orange/ambre du logo ── */
       :root {
@@ -33,7 +34,8 @@
         --accent-pale:  #FEF0E0;
         --border:       rgba(26,17,8,0.09);
         --border-dark:  rgba(255,255,255,0.08);
-        --font:         'Outfit', system-ui, sans-serif;
+        --font:         'Plus Jakarta Sans', system-ui, sans-serif;
+        --font-display: 'Fraunces', Georgia, serif;
         --max-w:        1280px;
         --nav-h:        72px;
         --r-xl:         24px;
@@ -42,7 +44,8 @@
       }
 
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
+      html.lenis, html.lenis body { height: auto; }
+      .lenis.lenis-smooth { scroll-behavior: auto !important; }
       body {
         font-family: var(--font);
         background: var(--bg);
@@ -87,16 +90,13 @@
         justify-content: space-between;
       }
 
-      /* Logo SVG : blanc sur dark hero, couleurs réelles sur nav clair */
       .nav-logo-img {
         height: 40px;
         width: auto;
         filter: brightness(0) invert(1);
         transition: filter 0.4s ease;
       }
-      .nav--light .nav-logo-img {
-        filter: none;
-      }
+      .nav--light .nav-logo-img { filter: none; }
 
       .btn-nav {
         padding: 10px 22px;
@@ -147,8 +147,9 @@
 
       .hero-photo-wrap {
         position: absolute;
-        top: 0; right: 0;
-        height: 100%; width: 52%;
+        top: -8%; right: 0;
+        height: 116%;   /* marge pour le parallax */
+        width: 52%;
         pointer-events: none;
         z-index: 1;
       }
@@ -219,18 +220,20 @@
       }
 
       .hero-title {
-        font-size: clamp(3.25rem, 7.5vw, 6.5rem);
-        font-weight: 800;
-        letter-spacing: -0.04em;
-        line-height: 0.92;
+        font-family: var(--font-display);
+        font-size: clamp(3rem, 7vw, 6rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 0.98;
         color: #fff;
         margin-bottom: 28px;
         max-width: 14ch;
       }
+      .hero-title .line { display: block; }
       .hero-title em {
         font-style: italic;
         font-weight: 300;
-        color: rgba(255,255,255,0.4);
+        color: rgba(255,255,255,0.45);
       }
 
       .hero-sub {
@@ -290,9 +293,10 @@
         flex-wrap: wrap;
       }
       .stat-num {
+        font-family: var(--font-display);
         font-size: 2.25rem;
-        font-weight: 800;
-        letter-spacing: -0.04em;
+        font-weight: 600;
+        letter-spacing: -0.02em;
         color: #fff;
         line-height: 1;
         margin-bottom: 5px;
@@ -304,46 +308,23 @@
         line-height: 1.45;
         max-width: 16ch;
       }
-      /* 4e stat textuelle */
       .stat-badge {
-        font-size: 1.15rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 1.35rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
         color: var(--accent);
         line-height: 1;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
       }
 
-      /* ── Reveal animations ── */
-      .reveal {
-        opacity: 0;
-        transform: translateY(28px);
-        transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1),
-                    transform 0.6s cubic-bezier(0.16,1,0.3,1);
-      }
-      .reveal-scale {
-        opacity: 0;
-        transform: scale(0.95);
-        transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1),
-                    transform 0.65s cubic-bezier(0.16,1,0.3,1);
-      }
-      .reveal-x {
-        opacity: 0;
-        transform: translateX(-28px);
-        transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1),
-                    transform 0.6s cubic-bezier(0.16,1,0.3,1);
-      }
-      .reveal.visible, .reveal-scale.visible, .reveal-x.visible {
-        opacity: 1; transform: none;
-      }
-      .d1 { transition-delay: 0.07s; }
-      .d2 { transition-delay: 0.14s; }
-      .d3 { transition-delay: 0.21s; }
-      .d4 { transition-delay: 0.28s; }
-
-      @media (prefers-reduced-motion: reduce) {
-        .reveal, .reveal-scale, .reveal-x { opacity: 1; transform: none; transition: none; }
-      }
+      /* Éléments animés par GSAP : état initial via .anim (JS ajoute la classe au body) */
+      .js-anim .hero-eyebrow,
+      .js-anim .hero-title .line,
+      .js-anim .hero-sub,
+      .js-anim .hero-ctas,
+      .js-anim .hero-stats { opacity: 0; }
 
       /* ────────────────────────────────────────────────
          SERVICES — bento 4 tuiles
@@ -364,10 +345,16 @@
         flex-wrap: wrap;
       }
       .section-title {
-        font-size: clamp(2rem, 3.8vw, 3rem);
-        font-weight: 800;
-        letter-spacing: -0.035em;
+        font-family: var(--font-display);
+        font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
         line-height: 1.08;
+      }
+      .section-title em {
+        font-style: italic;
+        font-weight: 400;
+        color: var(--accent-dk);
       }
       .services-desc {
         max-width: 38ch;
@@ -470,14 +457,14 @@
       .tile-2 .tile-desc { color: rgba(255,255,255,0.55); }
       .tile-3 .tile-desc { color: rgba(255,255,255,0.75); }
 
-      /* Filigrane décoratif */
       .tile-1::after {
         content: '100%';
         position: absolute;
         right: -8px; bottom: -30px;
+        font-family: var(--font-display);
         font-size: clamp(100px, 14vw, 180px);
-        font-weight: 800;
-        letter-spacing: -0.06em;
+        font-weight: 700;
+        letter-spacing: -0.04em;
         line-height: 1;
         color: rgba(240,130,28,0.12);
         pointer-events: none;
@@ -504,11 +491,8 @@
         z-index: 0;
         -webkit-mask-image: radial-gradient(ellipse 80% 80% at 20% 50%, black 25%, transparent 75%);
         mask-image: radial-gradient(ellipse 80% 80% at 20% 50%, black 25%, transparent 75%);
-        opacity: 0;
-        transform: translateX(-60px);
-        transition: opacity 0.9s ease 0.2s, transform 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s;
+        opacity: 0.18;
       }
-      .pourquoi-deco-photo.visible { opacity: 0.18; transform: translateX(0); }
       .pourquoi-deco-photo img {
         width: 100%; height: auto;
         mix-blend-mode: luminosity;
@@ -546,6 +530,7 @@
         color: #fff;
         margin-bottom: 24px;
       }
+      .pourquoi-left .section-title em { color: var(--accent); }
       .pourquoi-left p {
         font-size: 1rem;
         color: rgba(255,255,255,0.42);
@@ -693,11 +678,91 @@
       .contact-card:hover .c-caret { transform: translateX(4px); }
 
       /* ────────────────────────────────────────────────
-         FOOTER
+         CLOSING — dark, photo émotionnelle, fusion footer
+      ──────────────────────────────────────────────── */
+      .closing {
+        position: relative;
+        background: var(--dark);
+        min-height: 88vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        text-align: center;
+      }
+      .closing-photo {
+        position: absolute;
+        top: -10%; left: 0;
+        width: 100%; height: 120%;   /* marge pour le parallax */
+        pointer-events: none;
+        z-index: 0;
+      }
+      .closing-photo img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+        filter: brightness(0.4) saturate(0.85);
+      }
+      /* Dégradé bottom-only : fusion avec le footer */
+      .closing-photo::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 45%;
+        background: linear-gradient(to top, var(--dark), transparent);
+      }
+
+      .closing-content {
+        position: relative;
+        z-index: 2;
+        padding: 140px 28px;
+        max-width: 800px;
+      }
+      .closing-title {
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.04;
+        color: #fff;
+        margin-bottom: 28px;
+      }
+      .closing-title .split-l, .closing-title .split-r { display: block; }
+      .closing-title em {
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .closing-sub {
+        font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+        color: rgba(255,255,255,0.55);
+        line-height: 1.7;
+        max-width: 46ch;
+        margin: 0 auto 40px;
+      }
+      .btn-closing {
+        display: inline-block;
+        padding: 17px 40px;
+        border-radius: var(--r-btn);
+        background: var(--accent);
+        color: #fff;
+        font-family: var(--font);
+        font-size: 1rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: background 0.18s, transform 0.12s;
+      }
+      .btn-closing:hover { background: var(--accent-dk); }
+      .btn-closing:active { transform: scale(0.98); }
+
+      /* ────────────────────────────────────────────────
+         FOOTER — même couleur que closing, fusion
       ──────────────────────────────────────────────── */
       .footer {
         background: var(--dark);
-        padding: 56px 0;
+        border-top: none;
+        padding: 8px 0 56px;
       }
       .footer-inner {
         display: flex;
@@ -761,6 +826,9 @@
         .contact { padding: 72px 0; }
         .contact-inner { grid-template-columns: 1fr; gap: 40px; }
 
+        .closing { min-height: 70vh; }
+        .closing-content { padding: 100px 20px; }
+
         .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
         .hero-ctas { flex-direction: column; align-items: stretch; }
         .btn-hero-primary, .btn-hero-ghost { justify-content: center; text-align: center; }
@@ -793,7 +861,7 @@
     <!-- HERO ─────────────────────────────────────────── -->
     <section class="hero" id="hero" aria-labelledby="hero-title">
 
-      <div class="hero-photo-wrap" aria-hidden="true">
+      <div class="hero-photo-wrap" id="hero-photo" aria-hidden="true">
         <img
           src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=920&h=1100&q=80"
           alt=""
@@ -805,14 +873,14 @@
 
       <div class="hero-bottom-fade" aria-hidden="true"></div>
 
-      <div class="wrap">
+      <div class="wrap" id="hero-content">
         <div class="hero-eyebrow">
           <span class="eyebrow-dot" aria-hidden="true"></span>
           Expert-Comptable · Bruxelles
         </div>
         <h1 class="hero-title" id="hero-title">
-          La comptabilité,<br>
-          <em>bien faite.</em>
+          <span class="line">La comptabilité,</span>
+          <span class="line"><em>bien faite.</em></span>
         </h1>
         <p class="hero-sub">
           R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives. Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
@@ -847,18 +915,18 @@
     <section class="services" id="services" aria-labelledby="services-title">
       <div class="wrap">
         <header class="services-header">
-          <h2 class="section-title reveal" id="services-title">
-            Quatre services,<br>un seul contact.
+          <h2 class="section-title" id="services-title" data-anim="fade-up">
+            Quatre services,<br><em>un seul contact.</em>
           </h2>
-          <p class="services-desc reveal d1">
+          <p class="services-desc" data-anim="fade-up">
             Pas de renvoi entre services, pas de temps perdu à réexpliquer votre situation. Ricardo suit votre dossier de A à Z.
           </p>
         </header>
 
-        <div class="bento">
+        <div class="bento" id="bento">
 
           <!-- Tuile 1 : 100% Digital -->
-          <div class="bento-tile tile-1 reveal-scale">
+          <div class="bento-tile tile-1">
             <img
               class="tile-img"
               src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&h=600&q=75"
@@ -880,7 +948,7 @@
           </div>
 
           <!-- Tuile 2 : Comptabilité & fiscalité -->
-          <div class="bento-tile tile-2 reveal-scale d1">
+          <div class="bento-tile tile-2">
             <div class="tile-content">
               <div class="tile-tag">
                 <span class="tag-dot" aria-hidden="true"></span>
@@ -894,7 +962,7 @@
           </div>
 
           <!-- Tuile 3 : Pilotage & optimisation -->
-          <div class="bento-tile tile-3 reveal-scale d2">
+          <div class="bento-tile tile-3">
             <div class="tile-content">
               <div class="tile-tag">
                 <span class="tag-dot" aria-hidden="true"></span>
@@ -908,7 +976,7 @@
           </div>
 
           <!-- Tuile 4 : Accompagnement sur mesure -->
-          <div class="bento-tile tile-4 reveal-scale d3">
+          <div class="bento-tile tile-4">
             <img
               class="tile-img"
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&h=520&q=75"
@@ -937,7 +1005,7 @@
     <!-- POURQUOI ──────────────────────────────────────── -->
     <section class="pourquoi" id="pourquoi" aria-labelledby="pourquoi-title">
 
-      <div class="pourquoi-deco-photo reveal" aria-hidden="true">
+      <div class="pourquoi-deco-photo" aria-hidden="true">
         <img
           src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=700&h=900&q=65"
           alt=""
@@ -950,20 +1018,20 @@
         <div class="pourquoi-inner">
 
           <div class="pourquoi-left">
-            <h2 class="section-title reveal-x" id="pourquoi-title">
-              Un partenaire<br>à chaque étape<br>de votre activité.
+            <h2 class="section-title" id="pourquoi-title" data-anim="fade-up">
+              Un partenaire<br>à chaque étape<br><em>de votre activité.</em>
             </h2>
-            <p class="reveal d1">
+            <p data-anim="fade-up">
               Créer une entreprise, gérer sa comptabilité, optimiser sa fiscalité ou prendre les bonnes décisions au bon moment : chaque étape présente ses défis.
             </p>
-            <p class="reveal d2">
+            <p data-anim="fade-up">
               Chez R&amp;C Advisory, nous accompagnons les entrepreneurs tout au long de leur parcours avec une approche moderne, réactive et entièrement digitalisée. Grâce à plus de 9 ans d'expérience en Belgique, vous bénéficiez de l'expertise d'un cabinet structuré tout en conservant la proximité et le suivi personnalisé d'un interlocuteur unique. Notre objectif est simple&nbsp;: vous permettre de vous concentrer sur votre activité pendant que nous nous occupons du reste.
             </p>
           </div>
 
           <div class="timeline" role="list">
 
-            <div class="t-step reveal" role="listitem">
+            <div class="t-step" role="listitem">
               <div class="t-num" aria-hidden="true">01</div>
               <h3 class="t-title">Création &amp; lancement</h3>
               <p class="t-text">
@@ -971,7 +1039,7 @@
               </p>
             </div>
 
-            <div class="t-step reveal d1" role="listitem">
+            <div class="t-step" role="listitem">
               <div class="t-num" aria-hidden="true">02</div>
               <h3 class="t-title">Comptabilité &amp; fiscalité</h3>
               <p class="t-text">
@@ -979,7 +1047,7 @@
               </p>
             </div>
 
-            <div class="t-step reveal d2" role="listitem">
+            <div class="t-step" role="listitem">
               <div class="t-num" aria-hidden="true">03</div>
               <h3 class="t-title">Pilotage &amp; optimisation</h3>
               <p class="t-text">
@@ -987,7 +1055,7 @@
               </p>
             </div>
 
-            <div class="t-step reveal d3" role="listitem">
+            <div class="t-step" role="listitem">
               <div class="t-num" aria-hidden="true">04</div>
               <h3 class="t-title">Accompagnement sur mesure</h3>
               <p class="t-text">
@@ -1008,25 +1076,26 @@
 
           <div class="contact-copy">
             <div class="contact-section-label">Premier contact</div>
-            <h2 class="section-title reveal" id="contact-title">
-              Parlons de<br>votre situation.
+            <h2 class="section-title" id="contact-title" data-anim="fade-up">
+              Parlons de<br><em>votre situation.</em>
             </h2>
-            <p class="reveal d1">
+            <p data-anim="fade-up">
               Que vous soyez en phase de création, indépendant ou dirigeant d'une société, prenons le temps d'échanger sur vos besoins et vos objectifs.
             </p>
-            <p class="reveal d2">
+            <p data-anim="fade-up">
               Chez R&amp;C Advisory, vous bénéficiez d'un accompagnement personnalisé, d'une gestion 100&nbsp;% digitale et d'un interlocuteur unique qui connaît réellement votre dossier.
             </p>
-            <p class="reveal d3">
+            <p data-anim="fade-up">
               Le premier entretien est gratuit et sans engagement. L'occasion de découvrir comment nous pouvons vous aider à piloter votre activité en toute sérénité.
             </p>
-            <span class="free-pill reveal d4">Premier entretien offert</span>
+            <span class="free-pill" data-anim="fade-up">Premier entretien offert</span>
           </div>
 
           <div class="contact-cards">
             <a
               href="mailto:ricardo@rcadvisory.be?subject=Demande%20de%20rendez-vous%20-%20R%26C%20Advisory"
-              class="contact-card reveal"
+              class="contact-card"
+              data-anim="fade-up"
               aria-label="Envoyer un email à Ricardo Calderon"
             >
               <div class="c-icon c-icon-email" aria-hidden="true">
@@ -1046,7 +1115,8 @@
 
             <a
               href="https://wa.me/32495934562?text=Bonjour%20Ricardo%2C%20je%20souhaite%20prendre%20rendez-vous."
-              class="contact-card reveal d1"
+              class="contact-card"
+              data-anim="fade-up"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Contacter via WhatsApp"
@@ -1067,6 +1137,29 @@
           </div>
 
         </div>
+      </div>
+    </section>
+
+
+    <!-- CLOSING ──────────────────────────────────────── -->
+    <section class="closing" id="closing" aria-labelledby="closing-title">
+      <div class="closing-photo" id="closing-photo" aria-hidden="true">
+        <img
+          src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1800&h=1000&q=75"
+          alt=""
+          loading="lazy"
+          width="1800" height="1000"
+        />
+      </div>
+      <div class="closing-content">
+        <h2 class="closing-title" id="closing-title">
+          <span class="split-l">Votre activité mérite</span>
+          <span class="split-r"><em>une comptabilité sereine.</em></span>
+        </h2>
+        <p class="closing-sub" data-anim="fade-up">
+          Un premier échange suffit pour savoir si nous sommes le bon partenaire pour vous.
+        </p>
+        <a href="#contact" class="btn-closing" data-anim="fade-up">Prendre rendez-vous</a>
       </div>
     </section>
 
@@ -1092,29 +1185,196 @@
     </footer>
 
 
-    <script>
-      const nav  = document.getElementById('nav');
-      const hero = document.getElementById('hero');
-      if (nav && hero) {
-        const sentinel = document.createElement('div');
-        /* Sentinel juste en-dessous du viewport initial : nav light dès que l'on quitte le hero */
-        sentinel.style.cssText = `position:absolute;top:${window.innerHeight - 1}px;height:1px;width:100%;pointer-events:none;`;
-        hero.style.position = 'relative';
-        hero.appendChild(sentinel);
-        new IntersectionObserver(
-          ([e]) => nav.classList.toggle('nav--light', !e.isIntersecting),
-          { threshold: 0 }
-        ).observe(sentinel);
-      }
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" is:inline></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" is:inline></script>
 
-      const obs = new IntersectionObserver(
-        (entries) => entries.forEach(e => {
-          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-        }),
-        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
-      );
-      document.querySelectorAll('.reveal,.reveal-scale,.reveal-x,.pourquoi-deco-photo')
-        .forEach(el => obs.observe(el));
+    <script is:inline>
+      window.addEventListener('load', function () {
+
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+
+        /* ── Nav dark/light (indépendant de GSAP) ── */
+        var nav = document.getElementById('nav');
+        var hero = document.getElementById('hero');
+        if (nav && hero) {
+          var sentinel = document.createElement('div');
+          sentinel.style.cssText = 'position:absolute;top:' + (window.innerHeight - 1) + 'px;height:1px;width:100%;pointer-events:none;';
+          hero.style.position = 'relative';
+          hero.appendChild(sentinel);
+          new IntersectionObserver(
+            function (entries) { nav.classList.toggle('nav--light', !entries[0].isIntersecting); },
+            { threshold: 0 }
+          ).observe(sentinel);
+        }
+
+        if (!hasGsap || reduceMotion) { return; }
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        /* ── Lenis smooth scroll ── */
+        var lenis = null;
+        if (typeof Lenis !== 'undefined') {
+          lenis = new Lenis({
+            duration: 1.5,
+            easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }
+          });
+          lenis.on('scroll', ScrollTrigger.update);
+          gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+          gsap.ticker.lagSmoothing(0);
+
+          /* Ancres internes via Lenis */
+          var anchors = document.querySelectorAll('a[href^="#"]');
+          for (var i = 0; i < anchors.length; i++) {
+            anchors[i].addEventListener('click', function (e) {
+              var target = document.querySelector(this.getAttribute('href'));
+              if (target) {
+                e.preventDefault();
+                lenis.scrollTo(target, { offset: -72 });
+              }
+            });
+          }
+        }
+
+        /* ── Hero entrance timeline ── */
+        document.body.classList.add('js-anim');
+        var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        tl.fromTo('.hero-eyebrow',
+            { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 })
+          .fromTo('.hero-title .line',
+            { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, '-=0.4')
+          .fromTo('.hero-sub',
+            { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, '-=0.5')
+          .fromTo('.hero-ctas',
+            { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.45')
+          .fromTo('.hero-stats',
+            { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.35');
+
+        /* ── Parallax photo hero ── */
+        gsap.to('#hero-photo', {
+          yPercent: 18,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+          }
+        });
+
+        /* ── Fade-out du contenu hero au scroll ── */
+        gsap.to('#hero-content', {
+          opacity: 0,
+          y: -40,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#hero',
+            start: 'top top',
+            end: '40% top',
+            scrub: 0.8
+          }
+        });
+
+        /* ── Bento cards : stagger reveal ── */
+        gsap.from('.bento-tile', {
+          opacity: 0,
+          y: 50,
+          duration: 0.8,
+          ease: 'power3.out',
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: '#bento',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+
+        /* ── Fade-up génériques ── */
+        var fadeEls = document.querySelectorAll('[data-anim="fade-up"]');
+        for (var j = 0; j < fadeEls.length; j++) {
+          gsap.from(fadeEls[j], {
+            opacity: 0,
+            y: 28,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: fadeEls[j],
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
+            }
+          });
+        }
+
+        /* ── Timeline steps ── */
+        var steps = document.querySelectorAll('.t-step');
+        for (var k = 0; k < steps.length; k++) {
+          gsap.from(steps[k], {
+            opacity: 0,
+            y: 28,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: steps[k],
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
+            }
+          });
+        }
+
+        /* ── Photo déco pourquoi ── */
+        gsap.from('.pourquoi-deco-photo', {
+          opacity: 0,
+          x: -60,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '#pourquoi',
+            start: 'top 70%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+
+        /* ── Split text closing : deux lignes qui s'écartent ── */
+        gsap.fromTo('.closing-title .split-l',
+          { x: 0 },
+          {
+            x: '-7vw',
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '#closing',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 0.6
+            }
+          });
+        gsap.fromTo('.closing-title .split-r',
+          { x: 0 },
+          {
+            x: '7vw',
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '#closing',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 0.6
+            }
+          });
+
+        /* ── Parallax photo closing ── */
+        gsap.to('#closing-photo', {
+          yPercent: 20,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#closing',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+          }
+        });
+
+        ScrollTrigger.refresh();
+      });
     </script>
 
   </body>
