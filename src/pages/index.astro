@@ -18,7 +18,7 @@
     <link rel="preload" as="image" href="/portrait-ricardo.jpg" />
 
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Hanken+Grotesk:ital,wght@0,300..800;1,300..700&display=swap');
 
       /* ── Tokens : palette orange/ambre du logo ── */
       :root {
@@ -34,7 +34,7 @@
         --accent-pale:  #FEF0E0;
         --border:       rgba(26,17,8,0.09);
         --border-dark:  rgba(255,255,255,0.08);
-        --font:         'Plus Jakarta Sans', system-ui, sans-serif;
+        --font:         'Hanken Grotesk', system-ui, sans-serif;
         --font-display: 'Fraunces', Georgia, serif;
         --max-w:        1280px;
         --nav-h:        72px;
@@ -699,16 +699,17 @@
       .closing-photo img {
         width: 100%; height: 100%;
         object-fit: cover;
-        object-position: center 40%;
-        filter: brightness(0.62) saturate(1);
+        object-position: center 42%;
+        filter: brightness(0.66) saturate(1.02);
       }
-      /* Dégradé bottom-only : fusion avec le footer */
+      /* Fondu bas long vers la couleur chaude du footer, pour une
+         transition sans couture entre l'image et le footer. */
       .closing-photo::after {
         content: '';
         position: absolute;
         bottom: 0; left: 0; right: 0;
-        height: 45%;
-        background: linear-gradient(to top, var(--dark), transparent);
+        height: 58%;
+        background: linear-gradient(to top, #1E140B 0%, rgba(30,20,11,0.6) 35%, transparent 100%);
       }
       /* Voile radial derrière le contenu pour la lisibilité */
       .closing::before {
@@ -1222,7 +1223,7 @@
           src="/brussels-skyline.jpg"
           alt=""
           loading="lazy"
-          width="2166" height="726"
+          width="1983" height="793"
         />
       </div>
       <div class="closing-content">
