@@ -211,11 +211,12 @@
         text-transform: uppercase;
         margin-bottom: 28px;
       }
+      /* Marque « slash » : un signe de balisage plus original qu'un point */
       .eyebrow-dot {
-        width: 6px; height: 6px;
-        border-radius: 50%;
-        background: var(--accent);
+        width: 10px; height: 12px;
         flex-shrink: 0;
+        background: var(--accent);
+        clip-path: polygon(38% 0, 100% 0, 62% 100%, 0 100%);
       }
 
       .hero-title {
@@ -392,6 +393,11 @@
         filter: brightness(0.7) saturate(0.9);
       }
       .bento-tile:hover .tile-img { transform: scale(1.06); }
+      /* Portrait de Ricardo : on cadre sur le buste/visage, côté droit */
+      .tile-img-ricardo {
+        object-position: 72% 26%;
+        filter: brightness(0.82) saturate(0.98);
+      }
 
       .tile-overlay {
         position: absolute; inset: 0;
@@ -423,9 +429,9 @@
       .tile-3 .tile-tag { color: rgba(255,255,255,0.65); }
 
       .tag-dot {
-        width: 5px; height: 5px;
-        border-radius: 50%;
+        width: 8px; height: 10px;
         flex-shrink: 0;
+        clip-path: polygon(38% 0, 100% 0, 62% 100%, 0 100%);
       }
       .tile-1 .tag-dot, .tile-4 .tag-dot { background: var(--accent); }
       .tile-2 .tag-dot { background: rgba(255,255,255,0.3); }
@@ -549,23 +555,24 @@
         padding-bottom: 52px;
       }
       .t-step:last-child { padding-bottom: 0; }
-      .t-step:nth-child(2) { padding-left: 40px; }
 
       .t-num {
         position: absolute;
         left: -56px; top: 0;
-        margin-left: -20px;
-        width: 40px; height: 40px;
+        margin-left: -22px;
+        width: 44px; height: 44px;
         border-radius: 50%;
-        background: var(--dark-mid);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: #241812;              /* cercle un peu plus clair */
+        border: 1.5px solid rgba(240,130,28,0.45);
+        box-shadow: 0 0 0 6px var(--dark-mid), 0 6px 18px rgba(240,130,28,0.12);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.65rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        color: rgba(255,255,255,0.32);
+        font-family: var(--font-display);
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: var(--accent);            /* numéro mis en avant */
         font-feature-settings: 'tnum';
       }
       .t-title {
@@ -681,8 +688,13 @@
       ──────────────────────────────────────────────── */
       .closing {
         position: relative;
+        width: 100%;
         background: var(--dark);
-        min-height: 88vh;
+        /* La section adopte le ratio de la photo pour l'afficher en
+           entier sur grand écran ; le min-height sert de garde-fou sur
+           les largeurs étroites (là, on cadre le côté droit, la coupole). */
+        aspect-ratio: 2166 / 726;
+        min-height: 440px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -691,25 +703,23 @@
       }
       .closing-photo {
         position: absolute;
-        top: -10%; left: 0;
-        width: 100%; height: 120%;   /* marge pour le parallax */
+        inset: 0;
         pointer-events: none;
         z-index: 0;
       }
       .closing-photo img {
         width: 100%; height: 100%;
         object-fit: cover;
-        object-position: center 42%;
-        filter: brightness(0.66) saturate(1.02);
+        object-position: right center;
+        filter: brightness(0.72) saturate(1.02);
       }
-      /* Fondu bas long vers la couleur chaude du footer, pour une
-         transition sans couture entre l'image et le footer. */
+      /* Fondu bas vers la couleur chaude du footer, sans masquer la ville */
       .closing-photo::after {
         content: '';
         position: absolute;
         bottom: 0; left: 0; right: 0;
-        height: 58%;
-        background: linear-gradient(to top, #1E140B 0%, rgba(30,20,11,0.6) 35%, transparent 100%);
+        height: 40%;
+        background: linear-gradient(to top, #1E140B 0%, rgba(30,20,11,0.55) 40%, transparent 100%);
       }
       /* Voile radial derrière le contenu pour la lisibilité */
       .closing::before {
@@ -724,7 +734,7 @@
       .closing-content {
         position: relative;
         z-index: 2;
-        padding: 140px 28px;
+        padding: 56px 28px;
         max-width: 800px;
       }
       .closing-title {
@@ -873,12 +883,13 @@
         .pourquoi-left { position: static; }
         .timeline { padding-left: 48px; }
         .t-num { left: -48px; }
-        .t-step:nth-child(2) { padding-left: 0; }
 
         .contact { padding: 72px 0; }
         .contact-inner { grid-template-columns: 1fr; gap: 40px; }
 
-        .closing { min-height: 70vh; }
+        /* Sur mobile on abandonne le ratio (sinon la hauteur du contenu
+           dilate la largeur) : hauteur classique, cadrage côté droit. */
+        .closing { aspect-ratio: auto; min-height: 78vh; }
         .closing-content { padding: 100px 20px; }
 
         .footer { padding: 64px 0 32px; }
@@ -898,7 +909,6 @@
         .pourquoi-inner { gap: 56px; }
         .pourquoi-deco-photo { width: 35%; left: -40px; }
         .contact-inner { gap: 56px; }
-        .t-step:nth-child(2) { padding-left: 20px; }
       }
 
       /* Écrans larges : on élargit le conteneur pour que le contenu
@@ -956,7 +966,8 @@
           <span class="line"><em>simplifiée.</em></span>
         </h1>
         <p class="hero-sub">
-          R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives. Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
+          R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives.<br>
+          Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
         </p>
         <div class="hero-ctas">
           <a href="#contact" class="btn-hero-primary">Prendre rendez-vous</a>
@@ -992,7 +1003,8 @@
             Quatre services,<br><em>un seul contact.</em>
           </h2>
           <p class="services-desc" data-anim="fade-up">
-            Vous expliquez votre situation une seule fois. Ricardo connaît votre dossier et le suit de A à Z, quelle que soit la question.
+            Vous expliquez votre situation une seule fois.<br>
+            Ricardo connaît votre dossier et le suit de A à Z, quelle que soit la question.
           </p>
         </header>
 
@@ -1015,7 +1027,7 @@
               </div>
               <div>
                 <div class="tile-name">100% Digital</div>
-                <div class="tile-desc">Choix de la structure, plan financier, constitution de société et formalités administratives. On vous accompagne depuis le début.</div>
+                <div class="tile-desc">Choix de la structure, plan financier, constitution de société et formalités administratives.<br>On vous accompagne depuis le début.</div>
               </div>
             </div>
           </div>
@@ -1029,7 +1041,7 @@
               </div>
               <div>
                 <div class="tile-name">Comptabilité &amp; fiscalité</div>
-                <div class="tile-desc">Gestion comptable, déclarations fiscales et suivi de l'ensemble de vos obligations. Vos échéances respectées, sans effort de votre côté.</div>
+                <div class="tile-desc">Gestion comptable, déclarations fiscales et suivi de l'ensemble de vos obligations.<br>Vos échéances respectées, sans effort de votre côté.</div>
               </div>
             </div>
           </div>
@@ -1051,11 +1063,11 @@
           <!-- Tuile 4 : Accompagnement sur mesure -->
           <div class="bento-tile tile-4">
             <img
-              class="tile-img"
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&h=520&q=75"
-              alt="Comptable professionnel"
+              class="tile-img tile-img-ricardo"
+              src="/ricardo-tile.jpg"
+              alt="Ricardo Calderon, R&C Advisory"
               loading="lazy"
-              width="700" height="520"
+              width="1571" height="1001"
             />
             <div class="tile-overlay"></div>
             <div class="tile-content">
@@ -1099,7 +1111,9 @@
               Créer une entreprise, gérer sa comptabilité, optimiser sa fiscalité ou prendre les bonnes décisions au bon moment : chaque étape présente ses défis.
             </p>
             <p data-anim="fade-up">
-              Chez R&amp;C Advisory, nous accompagnons les entrepreneurs tout au long de leur parcours avec une approche moderne, réactive et entièrement digitalisée. Grâce à plus de 9 ans d'expérience en Belgique, vous bénéficiez de l'expertise d'un cabinet structuré tout en conservant la proximité et le suivi personnalisé d'un interlocuteur unique. Notre objectif est simple&nbsp;: vous permettre de vous concentrer sur votre activité pendant que nous nous occupons du reste.
+              Chez R&amp;C Advisory, nous accompagnons les entrepreneurs tout au long de leur parcours avec une approche moderne, réactive et entièrement digitalisée.<br>
+              Grâce à plus de 9 ans d'expérience en Belgique, vous bénéficiez de l'expertise d'un cabinet structuré tout en conservant la proximité et le suivi personnalisé d'un interlocuteur unique.<br>
+              Notre objectif est simple&nbsp;: vous permettre de vous concentrer sur votre activité pendant que nous nous occupons du reste.
             </p>
           </div>
 
@@ -1160,7 +1174,8 @@
               Chez R&amp;C Advisory, vous bénéficiez d'un accompagnement personnalisé, d'une gestion 100&nbsp;% digitale et d'un interlocuteur unique qui connaît réellement votre dossier.
             </p>
             <p data-anim="fade-up">
-              Le premier entretien est gratuit et sans engagement. L'occasion de découvrir comment nous pouvons vous aider à piloter votre activité en toute sérénité.
+              Le premier entretien est gratuit et sans engagement.<br>
+              L'occasion de découvrir comment nous pouvons vous aider à piloter votre activité en toute sérénité.
             </p>
             <span class="free-pill" data-anim="fade-up">Premier entretien offert</span>
           </div>
@@ -1420,43 +1435,38 @@
           }
         });
 
-        /* ── Split text closing : deux lignes qui s'écartent ── */
-        gsap.fromTo('.closing-title .split-l',
-          { x: 0 },
-          {
-            x: '-7vw',
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '#closing',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.6
-            }
-          });
-        gsap.fromTo('.closing-title .split-r',
-          { x: 0 },
-          {
-            x: '7vw',
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '#closing',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.6
-            }
-          });
+        /* ── Split text closing : deux lignes qui s'écartent (desktop) ──
+           Désactivé sous 768px : l'écart horizontal déborderait et
+           décalerait le titre. */
+        if (window.innerWidth >= 768) {
+          gsap.fromTo('.closing-title .split-l',
+            { x: 0 },
+            {
+              x: '-7vw',
+              ease: 'none',
+              scrollTrigger: {
+                trigger: '#closing',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 0.6
+              }
+            });
+          gsap.fromTo('.closing-title .split-r',
+            { x: 0 },
+            {
+              x: '7vw',
+              ease: 'none',
+              scrollTrigger: {
+                trigger: '#closing',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 0.6
+              }
+            });
+        }
 
-        /* ── Parallax photo closing ── */
-        gsap.to('#closing-photo', {
-          yPercent: 20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#closing',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
-          }
-        });
+        /* Pas de parallax sur la photo closing : elle est cadrée pour
+           être vue en entier, un déplacement révélerait ses bords. */
 
         ScrollTrigger.refresh();
       });
