@@ -41,7 +41,7 @@ Suivre les prompts. Le `vercel.json` à la racine configure le build Astro.
 ## Personnalisations avant mise en ligne
 
 - **Numéro WhatsApp** : remplacer `32XXXXXXXXX` dans `src/pages/index.astro` (sections Contact et Footer) par le vrai numéro au format international sans `+` ni espaces (ex. `32477123456`).
-- **Email** : déjà configuré sur `ricardo@rcadvisory.be`.
+- **Email** : déjà configuré sur `ricardo@rc-advisory.be`.
 - **Objet du mail** : pré-rempli à `Demande de rendez-vous - R&C Advisory`.
 
 ## Structure
