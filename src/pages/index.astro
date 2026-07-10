@@ -156,7 +156,10 @@
       .hero-photo-wrap img {
         width: 100%; height: 100%;
         object-fit: cover;
-        object-position: right center;
+        /* Le sujet est vers 70% de la largeur de l'image : on décale la
+           fenêtre de cadrage pour que le visage tombe à droite du titre. */
+        object-position: 55% center;
+        filter: brightness(0.82) contrast(1.05) saturate(0.92);
       }
       .hero-photo-wrap::before {
         content: '';
@@ -978,6 +981,8 @@
 
         .hero .wrap { padding-top: 44px; padding-bottom: 130px; }
         .hero-photo-wrap { width: 100%; opacity: 0.35; }
+        /* Visage décalé côté droit, hors de la zone du titre */
+        .hero-photo-wrap img { object-position: 72% center; }
         .hero-photo-wrap::before {
           background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.6) 100%);
         }
@@ -1024,9 +1029,9 @@
 
       @media (min-width: 768px) and (max-width: 1023px) {
         .hero-photo-wrap { width: 64%; }
-        /* Sur tablette la fenêtre est étroite : on recentre pour garder
-           le visage dans le cadre plutôt que l'immeuble à droite. */
-        .hero-photo-wrap img { object-position: 68% center; }
+        /* Sur tablette la fenêtre est étroite : on décale davantage la
+           fenêtre de cadrage pour garder le visage à droite du titre. */
+        .hero-photo-wrap img { object-position: 58% center; }
         .bento { grid-template-rows: 280px 220px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
         .pourquoi-deco-photo { width: 35%; left: -40px; }
