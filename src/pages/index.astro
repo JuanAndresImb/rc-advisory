@@ -145,33 +145,64 @@
         z-index: 0;
       }
 
+      /* Photo panoramique : affichée à son ratio naturel, pleine largeur,
+         ancrée en bas du hero. Aucun recadrage : le visage et le bâtiment
+         gardent leur position (à droite), le haut de l'image se fond dans
+         le noir. */
       .hero-photo-wrap {
         position: absolute;
-        top: -8%; right: 0;
-        height: 116%;   /* marge pour le parallax */
-        width: 62%;
+        bottom: -10%;   /* marge pour le parallax */
+        right: 0;
+        width: 100%;
         pointer-events: none;
         z-index: 1;
       }
       .hero-photo-wrap img {
-        width: 100%; height: 100%;
-        object-fit: cover;
-        /* Le sujet est vers 70% de la largeur de l'image : on décale la
-           fenêtre de cadrage pour que le visage tombe à droite du titre. */
-        object-position: 55% center;
+        width: 100%; height: auto;
+        display: block;
         filter: brightness(0.82) contrast(1.05) saturate(0.92);
+        transform-origin: 70% center;
       }
+      /* Assise sombre côté texte, pour la lisibilité sur le brun clair */
       .hero-photo-wrap::before {
         content: '';
         position: absolute; inset: 0;
         background: linear-gradient(
           to right,
-          var(--dark) 0%,
-          rgba(14,11,7,0.75) 30%,
-          rgba(14,11,7,0.2) 60%,
+          rgba(14,11,7,0.88) 0%,
+          rgba(14,11,7,0.55) 38%,
+          rgba(14,11,7,0.1) 62%,
           transparent 100%
         );
         z-index: 2;
+      }
+      /* Fondu du bord haut de l'image vers le fond noir du hero */
+      .hero-photo-wrap::after {
+        content: '';
+        position: absolute;
+        top: -1px; left: 0; right: 0;
+        height: 34%;
+        background: linear-gradient(to bottom, var(--dark) 0%, transparent 100%);
+        z-index: 2;
+      }
+      /* Halo ambré derrière le sujet, respiration lente */
+      .hero-glow {
+        position: absolute;
+        top: 8%; right: 6%;
+        width: 46vw; height: 46vw;
+        max-width: 760px; max-height: 760px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(240,130,28,0.16) 0%, transparent 62%);
+        pointer-events: none;
+        z-index: 3;
+        animation: glowBreath 7s ease-in-out infinite;
+      }
+      @keyframes glowBreath {
+        0%, 100% { opacity: 0.55; transform: scale(1); }
+        50%      { opacity: 1;    transform: scale(1.07); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero-glow { animation: none; }
       }
       /* Fondu bas : la photo s'enfonce longuement et en douceur vers le
          noir (dégradé sombre-sur-sombre, invisible), et le basculement
@@ -980,12 +1011,15 @@
         .wrap { padding: 0 20px; }
 
         .hero .wrap { padding-top: 44px; padding-bottom: 130px; }
-        .hero-photo-wrap { width: 100%; opacity: 0.35; }
-        /* Visage décalé côté droit, hors de la zone du titre */
-        .hero-photo-wrap img { object-position: 72% center; }
+        /* En étroit, retour au plein cadre : photo en fond discret,
+           fenêtre centrée sur le sujet. */
+        .hero-photo-wrap { top: -8%; bottom: auto; height: 116%; opacity: 0.4; }
+        .hero-photo-wrap img { height: 100%; object-fit: cover; object-position: 72% center; }
         .hero-photo-wrap::before {
           background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.6) 100%);
         }
+        .hero-photo-wrap::after { display: none; }
+        .hero-glow { display: none; }
         .hero-stats { gap: 24px; }
 
         .services { padding: 72px 0 88px; }
@@ -1028,10 +1062,12 @@
       }
 
       @media (min-width: 768px) and (max-width: 1023px) {
-        .hero-photo-wrap { width: 64%; }
-        /* Sur tablette la fenêtre est étroite : on décale davantage la
-           fenêtre de cadrage pour garder le visage à droite du titre. */
-        .hero-photo-wrap img { object-position: 58% center; }
+        /* Fenêtre étroite : retour au plein cadre, fenêtre sur le sujet,
+           le bâtiment reste partiellement visible à droite. */
+        .hero-photo-wrap { top: -8%; bottom: auto; height: 116%; }
+        .hero-photo-wrap img { height: 100%; object-fit: cover; object-position: 62% center; }
+        .hero-photo-wrap::after { display: none; }
+        .hero-glow { display: none; }
         .bento { grid-template-rows: 280px 220px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
         .pourquoi-deco-photo { width: 35%; left: -40px; }
@@ -1039,18 +1075,16 @@
       }
 
       /* Écrans larges : on élargit le conteneur pour que le contenu
-         reste ancré et ne « flotte » pas au centre, et on cale la
-         photo hero au bord du contenu plutôt qu'au bord de l'écran. */
+         reste ancré et ne « flotte » pas au centre. La photo est déjà
+         pleine largeur, elle s'étire naturellement. */
       @media (min-width: 1600px) {
         :root { --max-w: 1480px; }
       }
       @media (min-width: 1920px) {
         :root { --max-w: 1680px; }
-        .hero-photo-wrap { width: 54%; }
       }
       @media (min-width: 2400px) {
         :root { --max-w: 1840px; }
-        .hero-photo-wrap { width: 50%; }
       }
     </style>
   </head>
@@ -1077,9 +1111,11 @@
           alt=""
           loading="eager"
           fetchpriority="high"
-          width="1592" height="988"
+          width="1823" height="863"
         />
       </div>
+
+      <div class="hero-glow" aria-hidden="true"></div>
 
       <div class="hero-bottom-fade" aria-hidden="true"></div>
 
@@ -1526,8 +1562,13 @@
         /* ── Hero entrance timeline ── */
         document.body.classList.add('js-anim');
         var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        tl.fromTo('.hero-eyebrow',
-            { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 })
+        /* Ken Burns d'ouverture : la photo arrive légèrement zoomée et
+           se pose lentement, pendant que le texte entre en cascade. */
+        tl.fromTo('#hero-photo img',
+            { scale: 1.08, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 2.2, ease: 'power2.out' }, 0)
+          .fromTo('.hero-eyebrow',
+            { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, 0.35)
           .fromTo('.hero-title .line',
             { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, '-=0.4')
           .fromTo('.hero-sub',
@@ -1537,7 +1578,7 @@
           .fromTo('.hero-stats',
             { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.35');
 
-        /* ── Parallax photo hero ── */
+        /* ── Parallax photo hero (scroll) ── */
         gsap.to('#hero-photo', {
           yPercent: 18,
           ease: 'none',
@@ -1548,6 +1589,25 @@
             scrub: true
           }
         });
+
+        /* ── Parallax souris (desktop) : la photo et le halo suivent
+           doucement le curseur, en sens inverse, effet de profondeur. ── */
+        if (window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 1024) {
+          var heroEl = document.getElementById('hero');
+          var photoX = gsap.quickTo('#hero-photo img', 'x', { duration: 0.9, ease: 'power2.out' });
+          var glowX  = gsap.quickTo('.hero-glow', 'x', { duration: 1.4, ease: 'power2.out' });
+          var glowY  = gsap.quickTo('.hero-glow', 'y', { duration: 1.4, ease: 'power2.out' });
+          heroEl.addEventListener('mousemove', function (e) {
+            var ratioX = (e.clientX / window.innerWidth) - 0.5;
+            var ratioY = (e.clientY / window.innerHeight) - 0.5;
+            photoX(ratioX * -18);
+            glowX(ratioX * 36);
+            glowY(ratioY * 26);
+          });
+          heroEl.addEventListener('mouseleave', function () {
+            photoX(0); glowX(0); glowY(0);
+          });
+        }
 
         /* ── Fade-out du contenu hero au scroll ── */
         gsap.to('#hero-content', {
