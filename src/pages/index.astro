@@ -156,6 +156,9 @@
         width: 100%;
         pointer-events: none;
         z-index: 1;
+        /* Le Ken Burns (scale 1.08) fait déborder l'image au-dessus du
+           fondu pendant le chargement : on rogne à l'intérieur du cadre. */
+        overflow: hidden;
       }
       .hero-photo-wrap img {
         width: 100%; height: auto;
@@ -225,6 +228,10 @@
       .hero .wrap {
         position: relative;
         z-index: 10;
+        /* Flex item : sans width explicite il se rétrécit à son contenu
+           et « flotte » vers le centre — on le force à occuper le
+           conteneur pour que le texte s'aligne avec le logo de la nav. */
+        width: 100%;
         padding-top: 72px;
         padding-bottom: 160px;
       }
