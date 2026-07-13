@@ -151,7 +151,7 @@
          le noir. */
       .hero-photo-wrap {
         position: absolute;
-        bottom: -10%;   /* marge pour le parallax */
+        bottom: -6%;   /* marge pour le parallax */
         right: 0;
         width: 100%;
         pointer-events: none;
@@ -1233,7 +1233,7 @@
           <div class="bento-tile tile-4">
             <img
               class="tile-img tile-img-ricardo"
-              src="/ricardo-tile.jpg"
+              src="/portrait-ricardo.jpg"
               alt="Ricardo Calderon, R&C Advisory"
               loading="lazy"
               width="1592" height="988"
@@ -1573,9 +1573,9 @@
            se pose lentement, pendant que le texte entre en cascade. */
         tl.fromTo('#hero-photo img',
             { scale: 1.08, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 2.2, ease: 'power2.out' }, 0)
+            { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0)
           .fromTo('.hero-eyebrow',
-            { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, 0.35)
+            { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, 0.1)
           .fromTo('.hero-title .line',
             { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, '-=0.4')
           .fromTo('.hero-sub',
