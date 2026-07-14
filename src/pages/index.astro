@@ -145,53 +145,48 @@
         z-index: 0;
       }
 
-      /* Photo panoramique : affichée à son ratio naturel, pleine largeur,
-         ancrée en bas du hero. Aucun recadrage : le visage et le bâtiment
-         gardent leur position (à droite), le haut de l'image se fond dans
-         le noir. */
+      /* Portrait vertical : cadré en « cover » sur la moitié droite du
+         hero, le sujet reste à droite, bien à l'écart du titre. */
       .hero-photo-wrap {
         position: absolute;
-        bottom: 0;     /* ancré en bas du hero */
-        right: 0;
-        width: 100%;
+        top: -8%; right: 0;
+        height: 116%;   /* marge pour le parallax */
+        width: 56%;
         pointer-events: none;
         z-index: 1;
-        /* Le Ken Burns (scale 1.08) fait déborder l'image au-dessus du
-           fondu pendant le chargement : on rogne à l'intérieur du cadre. */
         overflow: hidden;
       }
       .hero-photo-wrap img {
-        width: 100%; height: auto;
+        width: 100%; height: 100%;
         display: block;
-        /* Assombrie : le client veut le visage plutôt effacé, on garde
-           juste la silhouette et l'ambiance. */
-        filter: brightness(0.6) contrast(1.06) saturate(0.85);
-        transform-origin: 70% center;
+        object-fit: cover;
+        object-position: 50% 16%;   /* cadre le visage et le buste */
+        filter: brightness(0.82) contrast(1.04) saturate(0.94);
+        transform-origin: 60% center;
       }
-      /* Assise sombre côté texte, pour la lisibilité sur le brun clair */
+      /* Assise sombre côté texte : le bord gauche de la photo se fond dans
+         le noir du hero pour que le titre reste lisible. */
       .hero-photo-wrap::before {
         content: '';
         position: absolute; inset: 0;
         background: linear-gradient(
           to right,
-          rgba(14,11,7,0.88) 0%,
-          rgba(14,11,7,0.55) 38%,
-          rgba(14,11,7,0.1) 62%,
+          var(--dark) 0%,
+          rgba(14,11,7,0.72) 30%,
+          rgba(14,11,7,0.15) 60%,
           transparent 100%
         );
         z-index: 2;
       }
-      /* Fondus haut et bas de l'image : haut marqué (la photo entre dans
-         le noir), bas très discret (le hero-bottom-fade fait la transition) */
+      /* Fondus haut et bas : la photo entre dans le noir en haut et se
+         fond vers la section suivante en bas. Voile léger (visage visible). */
       .hero-photo-wrap::after {
         content: '';
         position: absolute;
         inset: 0;
         background:
-          /* Voile haut renforcé et prolongé : le visage (partie haute
-             de l'image) reste dans l'ombre. */
-          linear-gradient(to bottom, var(--dark) 0%, var(--dark) 12%, transparent 55%),
-          linear-gradient(to top, var(--dark) 0%, var(--dark) 6%, transparent 30%);
+          linear-gradient(to bottom, var(--dark) 0%, transparent 22%),
+          linear-gradient(to top, var(--dark) 0%, transparent 18%);
         z-index: 2;
       }
       /* Halo ambré derrière le sujet, respiration lente */
@@ -1043,14 +1038,13 @@
         .wrap { padding: 0 20px; }
 
         .hero .wrap { padding-top: 44px; padding-bottom: 130px; }
-        /* En étroit, retour au plein cadre : photo en fond discret,
-           fenêtre centrée sur le sujet. */
-        .hero-photo-wrap { top: -8%; bottom: auto; height: 116%; opacity: 0.4; }
-        .hero-photo-wrap img { height: 100%; object-fit: cover; object-position: 72% center; }
+        /* En étroit : photo plein cadre en fond discret, cadrée sur le
+           visage (haut du portrait). */
+        .hero-photo-wrap { width: 100%; opacity: 0.38; }
+        .hero-photo-wrap img { object-position: 50% 12%; }
         .hero-photo-wrap::before {
-          background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.6) 100%);
+          background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.62) 100%);
         }
-        .hero-photo-wrap::after { display: none; }
         .hero-glow { display: none; }
         .hero-stats { gap: 24px; }
 
@@ -1094,11 +1088,9 @@
       }
 
       @media (min-width: 768px) and (max-width: 1023px) {
-        /* Fenêtre étroite : retour au plein cadre, fenêtre sur le sujet,
-           le bâtiment reste partiellement visible à droite. */
-        .hero-photo-wrap { top: -8%; bottom: auto; height: 116%; }
-        .hero-photo-wrap img { height: 100%; object-fit: cover; object-position: 62% center; }
-        .hero-photo-wrap::after { display: none; }
+        /* Tablette : photo un peu plus large, sujet cadré à droite. */
+        .hero-photo-wrap { width: 64%; }
+        .hero-photo-wrap img { object-position: 50% 14%; }
         .hero-glow { display: none; }
         .bento { grid-template-rows: 280px 220px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
@@ -1143,7 +1135,7 @@
           alt=""
           loading="eager"
           fetchpriority="high"
-          width="1823" height="863"
+          width="1123" height="1401"
         />
       </div>
 
