@@ -163,7 +163,9 @@
       .hero-photo-wrap img {
         width: 100%; height: auto;
         display: block;
-        filter: brightness(0.82) contrast(1.05) saturate(0.92);
+        /* Assombrie : le client veut le visage plutôt effacé, on garde
+           juste la silhouette et l'ambiance. */
+        filter: brightness(0.6) contrast(1.06) saturate(0.85);
         transform-origin: 70% center;
       }
       /* Assise sombre côté texte, pour la lisibilité sur le brun clair */
@@ -186,7 +188,9 @@
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(to bottom, var(--dark) 0%, transparent 34%),
+          /* Voile haut renforcé et prolongé : le visage (partie haute
+             de l'image) reste dans l'ombre. */
+          linear-gradient(to bottom, var(--dark) 0%, var(--dark) 12%, transparent 55%),
           linear-gradient(to top, var(--dark) 0%, var(--dark) 6%, transparent 30%);
         z-index: 2;
       }
