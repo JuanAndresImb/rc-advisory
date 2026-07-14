@@ -151,7 +151,7 @@
          le noir. */
       .hero-photo-wrap {
         position: absolute;
-        bottom: -6%;   /* marge pour le parallax */
+        bottom: 0;     /* ancré en bas du hero */
         right: 0;
         width: 100%;
         pointer-events: none;
@@ -179,13 +179,15 @@
         );
         z-index: 2;
       }
-      /* Fondu du bord haut de l'image vers le fond noir du hero */
+      /* Fondus haut et bas de l'image : haut marqué (la photo entre dans
+         le noir), bas très discret (le hero-bottom-fade fait la transition) */
       .hero-photo-wrap::after {
         content: '';
         position: absolute;
-        top: -1px; left: 0; right: 0;
-        height: 34%;
-        background: linear-gradient(to bottom, var(--dark) 0%, transparent 100%);
+        inset: 0;
+        background:
+          linear-gradient(to bottom, var(--dark) 0%, transparent 34%),
+          linear-gradient(to top, var(--dark) 0%, var(--dark) 6%, transparent 30%);
         z-index: 2;
       }
       /* Halo ambré derrière le sujet, respiration lente */
@@ -207,18 +209,19 @@
       @media (prefers-reduced-motion: reduce) {
         .hero-glow { animation: none; }
       }
-      /* Fondu bas : la photo s'enfonce longuement et en douceur vers le
-         noir (dégradé sombre-sur-sombre, invisible), et le basculement
-         vers le fond clair se fait sur les tout derniers pixels — la bande
-         grise « cassée » reste donc très fine. */
+      /* Fondu bas : transition longue et douce vers le fond clair,
+         pour éviter les bandes visibles entre les couches. */
       .hero-bottom-fade {
         position: absolute;
         bottom: 0; left: 0; right: 0;
-        height: 30vh;
+        height: 32vh;
+        /* Bascule clair→sombre resserrée dans le bas (bande grise fine),
+           puis long fondu sombre→transparent invisible au-dessus. */
         background: linear-gradient(
           to top,
           var(--bg) 0%,
-          var(--dark) 14%,
+          var(--bg) 4%,
+          var(--dark) 17%,
           transparent 100%
         );
         pointer-events: none;
@@ -332,6 +335,7 @@
         padding-top: 40px;
         border-top: 1px solid rgba(255,255,255,0.07);
         flex-wrap: wrap;
+        max-width: 43%;
       }
       .stat-num {
         font-family: var(--font-display);
@@ -361,7 +365,6 @@
       }
 
       /* Éléments animés par GSAP : état initial via .anim (JS ajoute la classe au body) */
-      .js-anim .hero-eyebrow,
       .js-anim .hero-title .line,
       .js-anim .hero-sub,
       .js-anim .hero-ctas,
@@ -857,7 +860,8 @@
            entier sur grand écran ; le min-height sert de garde-fou sur
            les largeurs étroites (là, on cadre le côté droit, la coupole). */
         aspect-ratio: 2166 / 726;
-        min-height: 440px;
+        min-height: 360px;
+        max-height: 460px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -945,7 +949,7 @@
         position: relative;
         border-top: none;
         overflow: hidden;
-        padding: 88px 0 40px;
+        padding: 20px 0 20px;
         /* Dégradé chaud qui reprend la lumière du ciel de la photo
            au-dessus, puis fond vers le dark. Pas d'image de fond. */
         background:
@@ -958,13 +962,13 @@
         z-index: 1;
         display: grid;
         grid-template-columns: 1.2fr 1fr 1fr;
-        gap: 48px;
-        padding-bottom: 72px;
+        gap: 40px;
+        padding-bottom: 32px;
       }
       .footer-logo {
-        width: 230px;
+        width: 200px;
         height: auto;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
       .footer-tagline {
         font-size: 0.9rem;
@@ -1010,6 +1014,23 @@
         transition: color 0.15s;
       }
       .footer-legal a:hover { color: rgba(255,255,255,0.7); }
+
+      /* Vagues lumineuses : flux continu sur tout le footer */
+      .footer-wave {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        mix-blend-mode: screen;
+      }
+      .footer-wave-1 { filter: blur(40px); opacity: 0.55; }
+      .footer-wave-1 path { fill: rgba(240,130,28,0.50); }
+      .footer-wave-2 { filter: blur(30px); opacity: 0.45; }
+      .footer-wave-2 path { fill: rgba(240,130,28,0.38); }
+      .footer-wave-3 { filter: blur(22px); opacity: 0.35; }
+      .footer-wave-3 path { fill: rgba(240,130,28,0.28); }
 
       /* ────────────────────────────────────────────────
          RESPONSIVE
@@ -1057,12 +1078,12 @@
 
         /* Sur mobile on abandonne le ratio (sinon la hauteur du contenu
            dilate la largeur) : hauteur classique, cadrage côté droit. */
-        .closing { aspect-ratio: auto; min-height: 78vh; }
+        .closing { aspect-ratio: auto; min-height: 60vh; }
         .closing-content { padding: 100px 20px; }
 
-        .footer { padding: 64px 0 32px; }
-        .footer-top { grid-template-columns: 1fr; gap: 36px; padding-bottom: 48px; }
-        .footer-logo { width: 180px; }
+        .footer { padding: 20px 0 20px; }
+        .footer-top { grid-template-columns: 1fr; gap: 36px; padding-bottom: 40px; }
+        .footer-logo { width: 160px; }
         .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
         .hero-ctas { flex-direction: column; align-items: stretch; }
         .btn-hero-primary, .btn-hero-ghost { justify-content: center; text-align: center; }
@@ -1127,10 +1148,6 @@
       <div class="hero-bottom-fade" aria-hidden="true"></div>
 
       <div class="wrap" id="hero-content">
-        <div class="hero-eyebrow">
-          <span class="eyebrow-dot" aria-hidden="true"></span>
-          Expert-comptable à Bruxelles
-        </div>
         <h1 class="hero-title" id="hero-title">
           <span class="line">Votre comptabilité</span>
           <span class="line"><em>simplifiée.</em></span>
@@ -1443,6 +1460,15 @@
 
     <!-- FOOTER ───────────────────────────────────────── -->
     <footer class="footer" role="contentinfo">
+      <svg class="footer-wave footer-wave-1" viewBox="0 0 1440 240" preserveAspectRatio="none" aria-hidden="true">
+        <path id="wave-1" d="M0,80 C200,30 400,130 600,75 C800,20 1000,140 1200,85 C1320,55 1440,120 1440,80 L1440,240 L0,240 Z"/>
+      </svg>
+      <svg class="footer-wave footer-wave-2" viewBox="0 0 1440 240" preserveAspectRatio="none" aria-hidden="true">
+        <path id="wave-2" d="M0,110 C250,70 500,150 720,100 C940,50 1180,160 1440,115 L1440,240 L0,240 Z"/>
+      </svg>
+      <svg class="footer-wave footer-wave-3" viewBox="0 0 1440 240" preserveAspectRatio="none" aria-hidden="true">
+        <path id="wave-3" d="M0,145 C280,110 560,70 840,135 C1000,175 1200,95 1440,140 L1440,240 L0,240 Z"/>
+      </svg>
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand-col">
@@ -1560,7 +1586,20 @@
               var target = document.querySelector(href);
               if (target) {
                 e.preventDefault();
-                lenis.scrollTo(target, { offset: -72 });
+                /* Par défaut on laisse la place de la nav (72px). Pour les
+                   services, on descend un peu plus bas pour dégager tout
+                   le bento sous l'en-tête. */
+                var offset = (href === '#services') ? 10 : -72;
+                lenis.scrollTo(target, {
+                  offset: offset,
+                  /* Un saut programmatique peut « rater » les ScrollTrigger
+                     traversés : on les réévalue à l'arrivée pour révéler
+                     les tuiles (sinon elles restent en opacity 0). */
+                  onComplete: function () {
+                    ScrollTrigger.update();
+                    setTimeout(function () { ScrollTrigger.update(); }, 80);
+                  }
+                });
               }
             });
           }
@@ -1574,8 +1613,6 @@
         tl.fromTo('#hero-photo img',
             { scale: 1.08, opacity: 0 },
             { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0)
-          .fromTo('.hero-eyebrow',
-            { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, 0.1)
           .fromTo('.hero-title .line',
             { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, '-=0.4')
           .fromTo('.hero-sub',
@@ -1584,18 +1621,6 @@
             { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.45')
           .fromTo('.hero-stats',
             { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.35');
-
-        /* ── Parallax photo hero (scroll) ── */
-        gsap.to('#hero-photo', {
-          yPercent: 18,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-          }
-        });
 
         /* ── Parallax souris (desktop) : la photo et le halo suivent
            doucement le curseur, en sens inverse, effet de profondeur. ── */
@@ -1624,7 +1649,7 @@
           scrollTrigger: {
             trigger: '#hero',
             start: 'top top',
-            end: '40% top',
+            end: 'bottom top',
             scrub: 0.8
           }
         });
@@ -1722,6 +1747,40 @@
            être vue en entier, un déplacement révélerait ses bords. */
 
         ScrollTrigger.refresh();
+
+        /* ── Footer waves : flux continu sans friction ── */
+        (function animateFooterWaves() {
+          var wave1 = document.getElementById('wave-1');
+          var wave2 = document.getElementById('wave-2');
+          var wave3 = document.getElementById('wave-3');
+          if (!wave1 || !wave2 || !wave3) return;
+
+          var W = 1440, H = 240;
+
+          function wavePath(baseY, amp, t, speed, segs) {
+            var segW = W / segs, d = 'M0,' + baseY;
+            for (var i = 0; i < segs; i++) {
+              var phase = t * speed + i * 1.1;
+              var sx = i * segW;
+              var cpx1 = sx + segW * 0.32;
+              var cpy1 = baseY + Math.sin(phase) * amp;
+              var cpx2 = sx + segW * 0.68;
+              var cpy2 = baseY + Math.sin(phase + 0.5) * amp * 0.85;
+              var ex = sx + segW;
+              var ey = baseY + Math.sin(phase + 0.25) * amp * 0.5;
+              d += ' C' + cpx1.toFixed(0) + ',' + cpy1.toFixed(0) + ' ' + cpx2.toFixed(0) + ',' + cpy2.toFixed(0) + ' ' + ex.toFixed(0) + ',' + ey.toFixed(0);
+            }
+            return d + ' L' + W + ',' + H + ' L0,' + H + ' Z';
+          }
+
+          gsap.ticker.add(function(time) {
+            // GSAP ticker « time » est déjà en secondes
+            var speed = 0.7;
+            wave1.setAttribute('d', wavePath(60, 70, time, speed, 5));
+            wave2.setAttribute('d', wavePath(90, 58, time, speed, 5));
+            wave3.setAttribute('d', wavePath(115, 50, time, speed, 4));
+          });
+        })();
       });
     </script>
 
