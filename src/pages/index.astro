@@ -148,11 +148,15 @@
       /* Portrait vertical cadré à droite mais ramené vers le centre : le
          visage passe sous le titre, pour qu'une partie des lettres le
          recouvre (souhait client). */
+      /* Largeur ~58% : le ratio du cadre colle à celui du portrait, donc
+         quasiment aucun recadrage — plus de « distorsion » à droite. Le
+         sujet est cadré à droite, et c'est le texte (2e ligne décalée) qui
+         vient recouvrir une partie du visage. */
       .hero-photo-wrap {
         position: absolute;
-        top: -8%; right: 12%;   /* décalé à gauche : le visage passe sous le titre */
+        top: -8%; right: 0;
         height: 116%;   /* marge pour le parallax */
-        width: 70%;
+        width: 58%;
         pointer-events: none;
         z-index: 1;
         overflow: hidden;
@@ -161,9 +165,9 @@
         width: 100%; height: 100%;
         display: block;
         object-fit: cover;
-        object-position: 50% 46%;   /* le visage remonte dans la ligne du titre */
+        object-position: 50% 18%;   /* cadre le visage et le buste */
         filter: brightness(0.82) contrast(1.04) saturate(0.94);
-        transform-origin: 55% center;
+        transform-origin: 60% center;
       }
       /* Assise sombre côté texte : le bord gauche de la photo se fond dans
          le noir du hero pour que le titre reste lisible. */
@@ -271,9 +275,11 @@
         line-height: 0.98;
         color: #fff;
         margin-bottom: 28px;
-        max-width: 14ch;
       }
       .hero-title .line { display: block; }
+      /* 2e ligne décalée vers la droite : elle vient recouvrir une partie
+         du visage (le sujet est cadré à droite). */
+      .hero-title .line-indent { margin-left: clamp(3rem, 46vw, 40rem); }
       .hero-title em {
         font-style: italic;
         font-weight: 300;
@@ -1043,6 +1049,9 @@
            visage (haut du portrait). */
         .hero-photo-wrap { width: 100%; right: 0; opacity: 0.38; }
         .hero-photo-wrap img { object-position: 50% 12%; }
+        /* Pas de décalage sur mobile : la photo est en fond, le texte
+           déborderait à droite. */
+        .hero-title .line-indent { margin-left: 0; }
         .hero-photo-wrap::before {
           background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.62) 100%);
         }
@@ -1089,9 +1098,10 @@
       }
 
       @media (min-width: 768px) and (max-width: 1023px) {
-        /* Tablette : photo cadrée à droite, léger décalage pour l'overlap. */
-        .hero-photo-wrap { width: 66%; right: 4%; }
-        .hero-photo-wrap img { object-position: 50% 14%; }
+        /* Tablette : photo cadrée à droite, décalage du texte réduit. */
+        .hero-photo-wrap { width: 62%; right: 0; }
+        .hero-photo-wrap img { object-position: 50% 16%; }
+        .hero-title .line-indent { margin-left: clamp(2rem, 34vw, 20rem); }
         .hero-glow { display: none; }
         .bento { grid-template-rows: 280px 220px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
@@ -1147,7 +1157,7 @@
       <div class="wrap" id="hero-content">
         <h1 class="hero-title" id="hero-title">
           <span class="line">Votre comptabilité</span>
-          <span class="line"><em>simplifiée.</em></span>
+          <span class="line line-indent"><em>simplifiée.</em></span>
         </h1>
         <p class="hero-sub">
           R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives.<br>
