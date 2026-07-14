@@ -183,14 +183,16 @@
         );
         z-index: 2;
       }
-      /* Fondus haut et bas : la photo entre dans le noir en haut et se
-         fond vers la section suivante en bas. Voile léger (visage visible). */
+      /* Fondus haut/bas + voile de sombre sur le visage : une ombre douce
+         posée sur la zone du visage l'atténue à moitié, sans toucher la
+         photo ni le texte. */
       .hero-photo-wrap::after {
         content: '';
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(to bottom, var(--dark) 0%, transparent 22%),
+          radial-gradient(ellipse 34% 30% at 57% 22%, rgba(14,11,7,0.9) 0%, rgba(14,11,7,0.5) 42%, transparent 70%),
+          linear-gradient(to bottom, var(--dark) 0%, transparent 26%),
           linear-gradient(to top, var(--dark) 0%, transparent 18%);
         z-index: 2;
       }
@@ -275,11 +277,9 @@
         line-height: 0.98;
         color: #fff;
         margin-bottom: 28px;
+        max-width: 14ch;
       }
       .hero-title .line { display: block; }
-      /* 2e ligne décalée vers la droite : elle vient recouvrir une partie
-         du visage (le sujet est cadré à droite). */
-      .hero-title .line-indent { margin-left: clamp(3rem, 46vw, 40rem); }
       .hero-title em {
         font-style: italic;
         font-weight: 300;
@@ -1049,9 +1049,6 @@
            visage (haut du portrait). */
         .hero-photo-wrap { width: 100%; right: 0; opacity: 0.38; }
         .hero-photo-wrap img { object-position: 50% 12%; }
-        /* Pas de décalage sur mobile : la photo est en fond, le texte
-           déborderait à droite. */
-        .hero-title .line-indent { margin-left: 0; }
         .hero-photo-wrap::before {
           background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.62) 100%);
         }
@@ -1098,10 +1095,9 @@
       }
 
       @media (min-width: 768px) and (max-width: 1023px) {
-        /* Tablette : photo cadrée à droite, décalage du texte réduit. */
+        /* Tablette : photo cadrée à droite. */
         .hero-photo-wrap { width: 62%; right: 0; }
         .hero-photo-wrap img { object-position: 50% 16%; }
-        .hero-title .line-indent { margin-left: clamp(2rem, 34vw, 20rem); }
         .hero-glow { display: none; }
         .bento { grid-template-rows: 280px 220px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
@@ -1157,7 +1153,7 @@
       <div class="wrap" id="hero-content">
         <h1 class="hero-title" id="hero-title">
           <span class="line">Votre comptabilité</span>
-          <span class="line line-indent"><em>simplifiée.</em></span>
+          <span class="line"><em>simplifiée.</em></span>
         </h1>
         <p class="hero-sub">
           R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives.<br>
