@@ -145,13 +145,14 @@
         z-index: 0;
       }
 
-      /* Portrait vertical : cadré en « cover » sur la moitié droite du
-         hero, le sujet reste à droite, bien à l'écart du titre. */
+      /* Portrait vertical cadré à droite mais ramené vers le centre : le
+         visage passe sous le titre, pour qu'une partie des lettres le
+         recouvre (souhait client). */
       .hero-photo-wrap {
         position: absolute;
-        top: -8%; right: 0;
+        top: -8%; right: 12%;   /* décalé à gauche : le visage passe sous le titre */
         height: 116%;   /* marge pour le parallax */
-        width: 56%;
+        width: 70%;
         pointer-events: none;
         z-index: 1;
         overflow: hidden;
@@ -160,9 +161,9 @@
         width: 100%; height: 100%;
         display: block;
         object-fit: cover;
-        object-position: 50% 16%;   /* cadre le visage et le buste */
+        object-position: 50% 46%;   /* le visage remonte dans la ligne du titre */
         filter: brightness(0.82) contrast(1.04) saturate(0.94);
-        transform-origin: 60% center;
+        transform-origin: 55% center;
       }
       /* Assise sombre côté texte : le bord gauche de la photo se fond dans
          le noir du hero pour que le titre reste lisible. */
@@ -1040,7 +1041,7 @@
         .hero .wrap { padding-top: 44px; padding-bottom: 130px; }
         /* En étroit : photo plein cadre en fond discret, cadrée sur le
            visage (haut du portrait). */
-        .hero-photo-wrap { width: 100%; opacity: 0.38; }
+        .hero-photo-wrap { width: 100%; right: 0; opacity: 0.38; }
         .hero-photo-wrap img { object-position: 50% 12%; }
         .hero-photo-wrap::before {
           background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.62) 100%);
@@ -1088,8 +1089,8 @@
       }
 
       @media (min-width: 768px) and (max-width: 1023px) {
-        /* Tablette : photo un peu plus large, sujet cadré à droite. */
-        .hero-photo-wrap { width: 64%; }
+        /* Tablette : photo cadrée à droite, léger décalage pour l'overlap. */
+        .hero-photo-wrap { width: 66%; right: 4%; }
         .hero-photo-wrap img { object-position: 50% 14%; }
         .hero-glow { display: none; }
         .bento { grid-template-rows: 280px 220px; gap: 12px; }
@@ -1648,6 +1649,18 @@
             end: 'bottom top',
             scrub: 0.8
           }
+        });
+
+        /* ── Effet lettres au scroll : le titre s'élève par-dessus le
+           visage (plus vite que la photo qui, elle, descend), les deux
+           lignes à des vitesses légèrement différentes. ── */
+        gsap.to('.hero-title .line:nth-child(1)', {
+          yPercent: -55, ease: 'none',
+          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
+        });
+        gsap.to('.hero-title .line:nth-child(2)', {
+          yPercent: -78, ease: 'none',
+          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
         });
 
         /* ── Bento cards : stagger reveal ── */
