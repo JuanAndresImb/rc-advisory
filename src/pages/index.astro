@@ -148,26 +148,25 @@
       /* Portrait vertical cadré à droite mais ramené vers le centre : le
          visage passe sous le titre, pour qu'une partie des lettres le
          recouvre (souhait client). */
-      /* Largeur ~58% : le ratio du cadre colle à celui du portrait, donc
-         quasiment aucun recadrage — plus de « distorsion » à droite. Le
-         sujet est cadré à droite, et c'est le texte (2e ligne décalée) qui
-         vient recouvrir une partie du visage. */
+      /* Photo panoramique : le sujet est déjà cadré tout à droite dans
+         l'image, avec un grand dégradé vide à gauche pour le texte. On la
+         pose en plein cadre, ancrée à droite : on ne rogne que le vide. */
+      /* Affichée à son ratio naturel (pas de « cover » : le cadre du hero
+         est plus haut que l'image et la zoomerait, ce qui grossirait le
+         visage). Ancrée en bas, le haut se fond dans le noir. */
       .hero-photo-wrap {
         position: absolute;
-        top: -8%; right: 0;
-        height: 116%;   /* marge pour le parallax */
-        width: 58%;
+        bottom: 0; right: 0;
+        width: 100%;
         pointer-events: none;
         z-index: 1;
         overflow: hidden;
       }
       .hero-photo-wrap img {
-        width: 100%; height: 100%;
+        width: 100%; height: auto;
         display: block;
-        object-fit: cover;
-        object-position: 50% 18%;   /* cadre le visage et le buste */
         filter: brightness(0.82) contrast(1.04) saturate(0.94);
-        transform-origin: 60% center;
+        transform-origin: 80% center;
       }
       /* Assise sombre côté texte : le bord gauche de la photo se fond dans
          le noir du hero pour que le titre reste lisible. */
@@ -183,10 +182,18 @@
         );
         z-index: 2;
       }
-      /* Fondus haut/bas + voile de sombre sur le visage : une ombre douce
-         posée sur la zone du visage l'atténue à moitié, sans toucher la
-         photo ni le texte. */
-      
+      /* Fondus haut et bas : la photo entre dans le noir en haut et se
+         fond vers la section suivante en bas. */
+      .hero-photo-wrap::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(to bottom, var(--dark) 0%, transparent 24%),
+          linear-gradient(to top, var(--dark) 0%, transparent 18%);
+        z-index: 2;
+      }
+
       /* Halo ambré derrière le sujet, respiration lente */
       .hero-glow {
         position: absolute;
@@ -1066,8 +1073,10 @@
         .hero .wrap { padding-top: 44px; padding-bottom: 130px; }
         /* En étroit : photo plein cadre en fond discret, cadrée sur le
            visage (haut du portrait). */
-        .hero-photo-wrap { width: 100%; right: 0; opacity: 0.38; }
-        .hero-photo-wrap img { object-position: 50% 12%; }
+        /* Mobile : le panorama serait minuscule en bas, on repasse en
+           plein cadre zoomé sur le sujet, en fond discret. */
+        .hero-photo-wrap { top: -8%; bottom: auto; height: 116%; width: 100%; opacity: 0.55; }
+        .hero-photo-wrap img { height: 100%; object-fit: cover; object-position: 74% center; }
         .hero-photo-wrap::before {
           background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.62) 100%);
         }
@@ -1114,9 +1123,8 @@
       }
 
       @media (min-width: 768px) and (max-width: 1023px) {
-        /* Tablette : photo cadrée à droite. */
-        .hero-photo-wrap { width: 62%; right: 0; }
-        .hero-photo-wrap img { object-position: 50% 16%; }
+        /* Tablette : ratio naturel comme sur desktop. */
+        .hero-photo-wrap { width: 100%; right: 0; }
         .hero-glow { display: none; }
         .bento { grid-template-rows: 280px 220px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
@@ -1161,7 +1169,7 @@
           alt=""
           loading="eager"
           fetchpriority="high"
-          width="1123" height="1401"
+          width="1672" height="941"
         />
       </div>
 
