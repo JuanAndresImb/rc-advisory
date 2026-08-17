@@ -124,18 +124,25 @@
       /* ────────────────────────────────────────────────
          HERO
       ──────────────────────────────────────────────── */
+      /* Hero « long » : conteneur haut, dont l'intérieur est épinglé.
+         Sans JS, une hauteur d'un écran suffit (les phrases sont masquées). */
       .hero {
         position: relative;
-        min-height: 100dvh;
+        height: 100vh;
         background: var(--dark);
-        display: flex;
-        align-items: center;
-        padding-top: var(--nav-h);
-        overflow: hidden;
         z-index: 10;
       }
+      .hero.js-hero { height: 560vh; }
+      .hero-sticky {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
 
-      .hero::before {
+      .hero-sticky::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -243,15 +250,16 @@
         z-index: 5;
       }
 
+      /* Contenu d'ouverture : superposé au centre du bloc épinglé. */
       .hero .wrap {
-        position: relative;
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
         z-index: 10;
-        /* Flex item : sans width explicite il se rétrécit à son contenu
-           et « flotte » vers le centre — on le force à occuper le
-           conteneur pour que le texte s'aligne avec le logo de la nav. */
-        width: 100%;
-        padding-top: 28px;
-        padding-bottom: 64px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: calc(var(--nav-h) + 16px) 28px 32px;
       }
 
       .hero-eyebrow {
@@ -409,59 +417,33 @@
       .js-anim .hero-stats { opacity: 0; }
 
       /* ────────────────────────────────────────────────
-         STATEMENTS — phrases plein écran (façon Apple TV)
+         STATEMENTS — phrases plein écran dans le hero (façon Apple TV)
       ──────────────────────────────────────────────── */
-      .statements {
-        position: relative;
-        z-index: 20;
-        background: #080604;          /* noir intense pour la lisibilité */
-        /* Hauteur = distance de scroll : 100vh épinglé + 1 écran par phrase */
-        height: 500vh;
-      }
-      .statements-sticky {
-        position: sticky;
-        top: 0;
-        height: 100vh;
+      .hero-statements {
+        position: absolute;
+        inset: 0;
+        z-index: 12;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-        padding: 0 28px;
-      }
-      /* Halo ambré discret derrière les phrases */
-      .statements-sticky::before {
-        content: '';
-        position: absolute;
-        top: 50%; left: 50%;
-        width: 90vw; height: 90vw;
-        max-width: 1100px; max-height: 1100px;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(circle, rgba(240,130,28,0.06) 0%, transparent 60%);
+        padding: var(--nav-h) 28px 0;
         pointer-events: none;
       }
+      /* Sans JS : pas de phrases superposées invisibles, on masque. */
+      .hero:not(.js-hero) .hero-statements { display: none; }
       .statement {
         position: absolute;
-        max-width: 20ch;
+        max-width: 22ch;
         margin: 0 auto;
         font-family: var(--font-display);
         font-size: clamp(2rem, 5.2vw, 4.25rem);
         font-weight: 600;
         letter-spacing: -0.02em;
-        line-height: 1.08;
+        line-height: 1.1;
         color: #fff;
         text-align: center;
         opacity: 0;
         will-change: opacity, transform;
-      }
-      /* Sans JS : on empile les phrases lisiblement plutôt que superposées */
-      .statements:not(.js-statements) { height: auto; }
-      .statements:not(.js-statements) .statements-sticky {
-        position: static; height: auto;
-        flex-direction: column; gap: 64px;
-        padding: 120px 28px;
-      }
-      .statements:not(.js-statements) .statement {
-        position: relative; opacity: 1;
       }
 
       /* ────────────────────────────────────────────────
@@ -1250,82 +1232,74 @@
     </nav>
 
 
-    <!-- HERO ─────────────────────────────────────────── -->
+    <!-- HERO ─────────────────────────────────────────────
+         Hero « long » façon Apple TV : le bloc est épinglé (sticky) sur
+         plusieurs écrans. On ouvre sur la photo + le titre, puis au scroll
+         la photo s'assombrit, le contenu s'efface, et des phrases-clés
+         apparaissent l'une après l'autre par-dessus. -->
     <section class="hero" id="hero" aria-labelledby="hero-title">
+      <div class="hero-sticky">
 
-      <div class="hero-photo-wrap" id="hero-photo" aria-hidden="true">
-        <img
-          src="/portrait-ricardo.jpg"
-          alt=""
-          loading="eager"
-          fetchpriority="high"
-          width="1727" height="910"
-        />
-      </div>
-
-      <div class="hero-glow" aria-hidden="true"></div>
-
-      <!-- Voile qui s'assombrit au scroll pour masquer le visage -->
-      <div class="hero-scrim" id="hero-scrim" aria-hidden="true"></div>
-
-      <div class="hero-bottom-fade" aria-hidden="true"></div>
-
-      <div class="wrap hero-centered" id="hero-content">
-        <div class="hero-eyebrow">
-          <span class="eyebrow-dot" aria-hidden="true"></span>
-          Expert-comptable à Bruxelles
+        <div class="hero-photo-wrap" id="hero-photo" aria-hidden="true">
+          <img
+            src="/portrait-ricardo.jpg"
+            alt=""
+            loading="eager"
+            fetchpriority="high"
+            width="1727" height="910"
+          />
         </div>
-        <h1 class="hero-title" id="hero-title">
-          <span class="line">Votre comptabilité</span>
-          <span class="line"><em>simplifiée.</em></span>
-        </h1>
-        <p class="hero-sub">
-          R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives.<br>
-          Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
-        </p>
-        <div class="hero-ctas">
-          <a href="#contact-modal" class="btn-hero-primary" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">Prendre rendez-vous</a>
-          <a href="#services" class="btn-hero-ghost">Voir les services</a>
-        </div>
-        <div class="hero-stats">
-          <div>
-            <div class="stat-num">9<span>+</span></div>
-            <div class="stat-label">Ans d'expérience en comptabilité et fiscalité</div>
-          </div>
-          <div>
-            <div class="stat-num">100<span>%</span></div>
-            <div class="stat-label">Gestion digitale de votre dossier</div>
-          </div>
-          <div>
-            <div class="stat-num">1</div>
-            <div class="stat-label">Interlocuteur unique dédié</div>
-          </div>
-          <div>
-            <div class="stat-badge">Sur Mesure</div>
-            <div class="stat-label">Accompagnement personnalisé pour chaque entreprise</div>
-          </div>
-        </div>
-      </div>
-    </section>
 
+        <div class="hero-glow" aria-hidden="true"></div>
 
-    <!-- STATEMENTS ───────────────────────────────────── -->
-    <!-- Séquence de phrases (façon Apple TV) : fond noir intense, chaque
-         message apparaît l'un après l'autre au scroll, à lire posément. -->
-    <section class="statements" id="statements" aria-label="Notre approche en quelques mots">
-      <div class="statements-sticky">
-        <p class="statement" data-statement>
-          Votre comptabilité, votre fiscalité et vos obligations administratives, gérées de A à Z.
-        </p>
-        <p class="statement" data-statement>
-          100&nbsp;% digital. Zéro déplacement, zéro classeur en carton.
-        </p>
-        <p class="statement" data-statement>
-          Un seul interlocuteur, qui connaît vraiment votre dossier.
-        </p>
-        <p class="statement" data-statement>
-          Un accompagnement sur mesure, à chaque étape de votre activité.
-        </p>
+        <!-- Voile qui s'assombrit au scroll pour masquer le visage -->
+        <div class="hero-scrim" id="hero-scrim" aria-hidden="true"></div>
+
+        <div class="wrap hero-centered" id="hero-content">
+          <div class="hero-eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            Expert-comptable à Bruxelles
+          </div>
+          <h1 class="hero-title" id="hero-title">
+            <span class="line">Votre comptabilité</span>
+            <span class="line"><em>simplifiée.</em></span>
+          </h1>
+          <p class="hero-sub">
+            R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives.<br>
+            Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
+          </p>
+          <div class="hero-ctas">
+            <a href="#contact-modal" class="btn-hero-primary" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">Prendre rendez-vous</a>
+            <a href="#services" class="btn-hero-ghost">Voir les services</a>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <div class="stat-num">9<span>+</span></div>
+              <div class="stat-label">Ans d'expérience en comptabilité et fiscalité</div>
+            </div>
+            <div>
+              <div class="stat-num">100<span>%</span></div>
+              <div class="stat-label">Gestion digitale de votre dossier</div>
+            </div>
+            <div>
+              <div class="stat-num">1</div>
+              <div class="stat-label">Interlocuteur unique dédié</div>
+            </div>
+            <div>
+              <div class="stat-badge">Sur Mesure</div>
+              <div class="stat-label">Accompagnement personnalisé pour chaque entreprise</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phrases plein écran, révélées une à une au scroll -->
+        <div class="hero-statements" id="hero-statements" aria-label="Notre approche en quelques mots">
+          <p class="statement">Votre comptabilité, votre fiscalité et vos obligations administratives, gérées de A à Z.</p>
+          <p class="statement">100&nbsp;% digital. Zéro déplacement, zéro classeur en carton.</p>
+          <p class="statement">Un seul interlocuteur, qui connaît vraiment votre dossier.</p>
+          <p class="statement">Un accompagnement sur mesure, à chaque étape de votre activité.</p>
+        </div>
+
       </div>
     </section>
 
@@ -1795,49 +1769,42 @@
           });
         }
 
-        /* ── Effet scroll : le visage s'efface, le texte passe devant ──
-           1) un voile s'assombrit rapidement sur la photo (le visage
-              disparaît dans l'ombre) ;
-           2) la photo se déplace et zoome légèrement (mouvement) ;
-           3) le texte reste net et remonte pour passer au premier plan. */
-        gsap.fromTo('#hero-scrim',
-          { opacity: 0 },
-          {
-            opacity: 1, ease: 'none',
-            scrollTrigger: { trigger: '#hero', start: 'top top', end: '42% top', scrub: 0.5 }
-          });
-        gsap.to('#hero-photo img', {
-          yPercent: 12, scale: 1.1, ease: 'none',
-          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
-        });
-        gsap.to('#hero-content', {
-          y: -60, ease: 'none',
-          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 0.7 }
-        });
-
-        /* ── Statements plein écran (façon Apple TV) ──
-           Le bloc est épinglé (CSS sticky) et chaque phrase apparaît puis
-           s'efface l'une après l'autre au fil du scroll. On lit posément. */
-        var statementsSection = document.getElementById('statements');
-        if (statementsSection) {
-          statementsSection.classList.add('js-statements');
+        /* ── Hero long façon Apple TV : une seule timeline épinglée ──
+           Ouverture (photo + titre) → la photo s'assombrit et le contenu
+           s'efface → les phrases-clés se succèdent par-dessus. */
+        var heroSection = document.getElementById('hero');
+        if (heroSection) {
+          heroSection.classList.add('js-hero');
           var stmts = gsap.utils.toArray('.statement');
-          var stTl = gsap.timeline({
+          ScrollTrigger.refresh();
+
+          var master = gsap.timeline({
             scrollTrigger: {
-              trigger: '#statements',
+              trigger: '#hero',
               start: 'top top',
               end: 'bottom bottom',
               scrub: 0.6
             }
           });
+
+          /* Phase 1 : la photo dérive lentement sur toute la durée. */
+          master.to('#hero-photo img', { yPercent: 10, scale: 1.14, ease: 'none', duration: 10 }, 0);
+          /* Le voile s'assombrit et masque le visage. */
+          master.to('#hero-scrim', { opacity: 1, ease: 'none', duration: 1.1 }, 0);
+          /* Le contenu d'ouverture s'efface vers le haut. */
+          master.to('#hero-content', { opacity: 0, y: -50, ease: 'power1.in', duration: 0.9 }, 0.25);
+
+          /* Phase 2 : les phrases, une à une. */
+          var t = 1.5;
           for (var si = 0; si < stmts.length; si++) {
-            stTl.fromTo(stmts[si],
-              { opacity: 0, y: 48 },
-              { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
-            stTl.to(stmts[si], { opacity: 1, duration: 0.7 });   /* maintien lecture */
+            master.fromTo(stmts[si],
+              { opacity: 0, y: 46 },
+              { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, t);
+            master.to(stmts[si], { opacity: 1, duration: 0.9 }, t + 0.6);   /* maintien lecture */
             if (si < stmts.length - 1) {
-              stTl.to(stmts[si], { opacity: 0, y: -48, duration: 0.5, ease: 'power2.in' });
+              master.to(stmts[si], { opacity: 0, y: -46, duration: 0.6, ease: 'power2.in' }, t + 1.55);
             }
+            t += 2.1;
           }
         }
 
