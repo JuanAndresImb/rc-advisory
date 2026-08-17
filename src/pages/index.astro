@@ -194,6 +194,19 @@
         z-index: 2;
       }
 
+      /* Voile de masquage : au-dessus de la photo, sous le texte. Piloté
+         au scroll (opacité 0 → sombre) pour effacer le visage. */
+      .hero-scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        opacity: 0;
+        background:
+          radial-gradient(ellipse 70% 80% at 80% 40%, rgba(9,7,4,0.98) 0%, rgba(9,7,4,0.72) 52%, rgba(9,7,4,0.3) 82%),
+          linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.82) 100%);
+      }
+
       /* Halo ambré derrière le sujet, respiration lente */
       .hero-glow {
         position: absolute;
@@ -1175,6 +1188,9 @@
 
       <div class="hero-glow" aria-hidden="true"></div>
 
+      <!-- Voile qui s'assombrit au scroll pour masquer le visage -->
+      <div class="hero-scrim" id="hero-scrim" aria-hidden="true"></div>
+
       <div class="hero-bottom-fade" aria-hidden="true"></div>
 
       <div class="wrap" id="hero-content">
@@ -1677,29 +1693,24 @@
           });
         }
 
-        /* ── Fade-out du contenu hero au scroll ── */
+        /* ── Effet scroll : le visage s'efface, le texte passe devant ──
+           1) un voile s'assombrit rapidement sur la photo (le visage
+              disparaît dans l'ombre) ;
+           2) la photo se déplace et zoome légèrement (mouvement) ;
+           3) le texte reste net et remonte pour passer au premier plan. */
+        gsap.fromTo('#hero-scrim',
+          { opacity: 0 },
+          {
+            opacity: 1, ease: 'none',
+            scrollTrigger: { trigger: '#hero', start: 'top top', end: '42% top', scrub: 0.5 }
+          });
+        gsap.to('#hero-photo img', {
+          yPercent: 12, scale: 1.1, ease: 'none',
+          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+        });
         gsap.to('#hero-content', {
-          opacity: 0,
-          y: -40,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8
-          }
-        });
-
-        /* ── Effet lettres au scroll : le titre s'élève par-dessus le
-           visage (plus vite que la photo qui, elle, descend), les deux
-           lignes à des vitesses légèrement différentes. ── */
-        gsap.to('.hero-title .line:nth-child(1)', {
-          yPercent: -55, ease: 'none',
-          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
-        });
-        gsap.to('.hero-title .line:nth-child(2)', {
-          yPercent: -78, ease: 'none',
-          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
+          y: -60, ease: 'none',
+          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 0.7 }
         });
 
         /* ── Bento cards : stagger reveal ── */
