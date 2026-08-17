@@ -124,25 +124,22 @@
       /* ────────────────────────────────────────────────
          HERO
       ──────────────────────────────────────────────── */
-      /* Hero « long » : conteneur haut, dont l'intérieur est épinglé.
-         Sans JS, une hauteur d'un écran suffit (les phrases sont masquées). */
+      /* Hero « Apple TV » : fond photo épinglé (fixe), texte qui monte
+         par-dessus au scroll, puis la photo disparaît. */
       .hero {
         position: relative;
-        height: 100vh;
-        background: var(--dark);
+        background: #080604;          /* noir intense sous la photo */
         z-index: 10;
       }
-      .hero.js-hero { height: 560vh; }
-      .hero-sticky {
+      /* Fond épinglé sur un écran, le premier plan glisse par-dessus */
+      .hero-bg {
         position: sticky;
         top: 0;
         height: 100vh;
         overflow: hidden;
-        display: flex;
-        align-items: center;
+        z-index: 1;
       }
-
-      .hero-sticky::before {
+      .hero-bg::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -150,6 +147,42 @@
         background-size: 40px 40px;
         pointer-events: none;
         z-index: 0;
+      }
+      /* Premier plan : remonté par-dessus le fond fixe, défile normalement */
+      .hero-fg {
+        position: relative;
+        margin-top: -100vh;
+        z-index: 10;
+      }
+      .hero-intro {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: calc(var(--nav-h) + 16px) 28px 40px;
+      }
+      /* Colonne de phrases, déjà visibles, espacées : elles montent une à
+         une au scroll par-dessus la photo. */
+      .hero-statements {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 55vh;
+        padding: 30vh 28px 22vh;
+      }
+      .statement {
+        max-width: 22ch;
+        margin: 0 auto;
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 5.2vw, 4.25rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        color: #fff;
+        text-align: center;
       }
 
       /* Portrait vertical cadré à droite mais ramené vers le centre : le
@@ -163,15 +196,16 @@
          visage). Ancrée en bas, le haut se fond dans le noir. */
       .hero-photo-wrap {
         position: absolute;
-        bottom: 0; right: 0;
-        width: 100%;
+        inset: 0;
         pointer-events: none;
         z-index: 1;
         overflow: hidden;
       }
       .hero-photo-wrap img {
-        width: 100%; height: auto;
+        width: 100%; height: 100%;
         display: block;
+        object-fit: cover;
+        object-position: 78% center;   /* le sujet reste visible à droite */
         filter: brightness(0.82) contrast(1.04) saturate(0.94);
         transform-origin: 80% center;
       }
@@ -207,9 +241,11 @@
         z-index: 4;
         pointer-events: none;
         opacity: 0;
+        /* Assombrissement globalement uniforme (la photo reste visible mais
+           le texte blanc passe dessus), un peu plus dense sur le visage. */
         background:
-          radial-gradient(ellipse 70% 80% at 80% 40%, rgba(9,7,4,0.98) 0%, rgba(9,7,4,0.72) 52%, rgba(9,7,4,0.3) 82%),
-          linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.82) 100%);
+          radial-gradient(ellipse 60% 70% at 80% 40%, rgba(8,6,4,0.55) 0%, transparent 70%),
+          linear-gradient(rgba(8,6,4,0.62), rgba(8,6,4,0.62));
       }
 
       /* Halo ambré derrière le sujet, respiration lente */
@@ -415,36 +451,6 @@
       .js-anim .hero-sub,
       .js-anim .hero-ctas,
       .js-anim .hero-stats { opacity: 0; }
-
-      /* ────────────────────────────────────────────────
-         STATEMENTS — phrases plein écran dans le hero (façon Apple TV)
-      ──────────────────────────────────────────────── */
-      .hero-statements {
-        position: absolute;
-        inset: 0;
-        z-index: 12;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: var(--nav-h) 28px 0;
-        pointer-events: none;
-      }
-      /* Sans JS : pas de phrases superposées invisibles, on masque. */
-      .hero:not(.js-hero) .hero-statements { display: none; }
-      .statement {
-        position: absolute;
-        max-width: 22ch;
-        margin: 0 auto;
-        font-family: var(--font-display);
-        font-size: clamp(2rem, 5.2vw, 4.25rem);
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        line-height: 1.1;
-        color: #fff;
-        text-align: center;
-        opacity: 0;
-        will-change: opacity, transform;
-      }
 
       /* ────────────────────────────────────────────────
          SERVICES — bento 4 tuiles
@@ -1238,9 +1244,11 @@
          la photo s'assombrit, le contenu s'efface, et des phrases-clés
          apparaissent l'une après l'autre par-dessus. -->
     <section class="hero" id="hero" aria-labelledby="hero-title">
-      <div class="hero-sticky">
 
-        <div class="hero-photo-wrap" id="hero-photo" aria-hidden="true">
+      <!-- Fond épinglé : la photo reste fixe pendant que le texte monte,
+           puis elle disparaît quand le texte est passé. -->
+      <div class="hero-bg" id="hero-bg" aria-hidden="true">
+        <div class="hero-photo-wrap" id="hero-photo">
           <img
             src="/portrait-ricardo.jpg"
             alt=""
@@ -1249,13 +1257,14 @@
             width="1727" height="910"
           />
         </div>
+        <div class="hero-glow"></div>
+        <div class="hero-scrim" id="hero-scrim"></div>
+      </div>
 
-        <div class="hero-glow" aria-hidden="true"></div>
+      <!-- Premier plan qui défile normalement par-dessus le fond fixe -->
+      <div class="hero-fg">
 
-        <!-- Voile qui s'assombrit au scroll pour masquer le visage -->
-        <div class="hero-scrim" id="hero-scrim" aria-hidden="true"></div>
-
-        <div class="wrap hero-centered" id="hero-content">
+        <div class="hero-intro hero-centered" id="hero-content">
           <div class="hero-eyebrow">
             <span class="eyebrow-dot" aria-hidden="true"></span>
             Expert-comptable à Bruxelles
@@ -1292,8 +1301,8 @@
           </div>
         </div>
 
-        <!-- Phrases plein écran, révélées une à une au scroll -->
-        <div class="hero-statements" id="hero-statements" aria-label="Notre approche en quelques mots">
+        <!-- Phrases déjà présentes ; elles montent avec le scroll -->
+        <div class="hero-statements" aria-label="Notre approche en quelques mots">
           <p class="statement">Votre comptabilité, votre fiscalité et vos obligations administratives, gérées de A à Z.</p>
           <p class="statement">100&nbsp;% digital. Zéro déplacement, zéro classeur en carton.</p>
           <p class="statement">Un seul interlocuteur, qui connaît vraiment votre dossier.</p>
@@ -1769,43 +1778,33 @@
           });
         }
 
-        /* ── Hero long façon Apple TV : une seule timeline épinglée ──
-           Ouverture (photo + titre) → la photo s'assombrit et le contenu
-           s'efface → les phrases-clés se succèdent par-dessus. */
+        /* ── Hero façon Apple TV ──
+           Le texte défile naturellement (il est déjà là, il « monte »).
+           La photo est épinglée en fond : elle s'assombrit quand le texte
+           arrive, puis disparaît quand la dernière phrase est passée. */
         var heroSection = document.getElementById('hero');
         if (heroSection) {
-          heroSection.classList.add('js-hero');
-          var stmts = gsap.utils.toArray('.statement');
-          ScrollTrigger.refresh();
-
-          var master = gsap.timeline({
+          /* Assombrissement du fond pendant que l'intro laisse place aux
+             phrases (une fois l'intro sortie, la photo est tamisée). */
+          gsap.to('#hero-scrim', {
+            opacity: 1, ease: 'none',
             scrollTrigger: {
-              trigger: '#hero',
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: 0.6
+              trigger: '.hero-intro',
+              start: 'bottom bottom',
+              end: 'bottom top',
+              scrub: true
             }
           });
-
-          /* Phase 1 : la photo dérive lentement sur toute la durée. */
-          master.to('#hero-photo img', { yPercent: 10, scale: 1.14, ease: 'none', duration: 10 }, 0);
-          /* Le voile s'assombrit et masque le visage. */
-          master.to('#hero-scrim', { opacity: 1, ease: 'none', duration: 1.1 }, 0);
-          /* Le contenu d'ouverture s'efface vers le haut. */
-          master.to('#hero-content', { opacity: 0, y: -50, ease: 'power1.in', duration: 0.9 }, 0.25);
-
-          /* Phase 2 : les phrases, une à une. */
-          var t = 1.5;
-          for (var si = 0; si < stmts.length; si++) {
-            master.fromTo(stmts[si],
-              { opacity: 0, y: 46 },
-              { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, t);
-            master.to(stmts[si], { opacity: 1, duration: 0.9 }, t + 0.6);   /* maintien lecture */
-            if (si < stmts.length - 1) {
-              master.to(stmts[si], { opacity: 0, y: -46, duration: 0.6, ease: 'power2.in' }, t + 1.55);
+          /* La photo (fond) disparaît quand la dernière phrase arrive. */
+          gsap.to('#hero-bg', {
+            opacity: 0, ease: 'none',
+            scrollTrigger: {
+              trigger: '.hero-statements .statement:last-child',
+              start: 'center center',
+              end: 'bottom top',
+              scrub: true
             }
-            t += 2.1;
-          }
+          });
         }
 
         /* ── Bento cards : stagger reveal ── */
