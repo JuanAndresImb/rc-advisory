@@ -170,16 +170,14 @@
       }
       /* Assise sombre côté texte : le bord gauche de la photo se fond dans
          le noir du hero pour que le titre reste lisible. */
+      /* Voile de lisibilité pour un texte centré : vignette au centre +
+         assombrissement haut/bas, l'ambiance chaude reste sur les côtés. */
       .hero-photo-wrap::before {
         content: '';
         position: absolute; inset: 0;
-        background: linear-gradient(
-          to right,
-          var(--dark) 0%,
-          rgba(14,11,7,0.72) 30%,
-          rgba(14,11,7,0.15) 60%,
-          transparent 100%
-        );
+        background:
+          radial-gradient(ellipse 78% 68% at 50% 44%, rgba(14,11,7,0.5) 0%, transparent 78%),
+          linear-gradient(to bottom, rgba(14,11,7,0.6) 0%, rgba(14,11,7,0.32) 42%, rgba(14,11,7,0.6) 100%);
         z-index: 2;
       }
       /* Fondus haut et bas : la photo entre dans le noir en haut et se
@@ -278,6 +276,29 @@
         flex-shrink: 0;
         background: var(--accent);
         clip-path: polygon(38% 0, 100% 0, 62% 100%, 0 100%);
+      }
+
+      /* ── Hero centré (façon Apple TV) : tout empilé et centré ── */
+      .hero { text-align: center; }
+      .hero-centered {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hero-centered .hero-title {
+        max-width: 20ch;
+        margin-left: auto; margin-right: auto;
+      }
+      .hero-centered .hero-sub {
+        max-width: 56ch;
+        margin-left: auto; margin-right: auto;
+      }
+      .hero-centered .hero-ctas { justify-content: center; }
+      .hero-centered .hero-stats {
+        justify-content: center;
+        max-width: none;
+        width: 100%;
+        gap: 56px;
       }
 
       .hero-title {
@@ -1193,7 +1214,11 @@
 
       <div class="hero-bottom-fade" aria-hidden="true"></div>
 
-      <div class="wrap" id="hero-content">
+      <div class="wrap hero-centered" id="hero-content">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-dot" aria-hidden="true"></span>
+          Expert-comptable à Bruxelles
+        </div>
         <h1 class="hero-title" id="hero-title">
           <span class="line">Votre comptabilité</span>
           <span class="line"><em>simplifiée.</em></span>
