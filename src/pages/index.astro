@@ -184,6 +184,25 @@
         color: #fff;
         text-align: center;
       }
+      /* Accroche (ancien sous-titre), plus douce, en tête de la séquence */
+      .hero-lead {
+        max-width: 46ch;
+        margin: 0 auto;
+        font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+        line-height: 1.65;
+        color: rgba(255,255,255,0.72);
+        text-align: center;
+      }
+      /* Chiffres, en fin de séquence, en ligne centrée */
+      .hero-stats-flow {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px 64px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .hero-stats-flow > div { max-width: 20ch; }
 
       /* Portrait vertical cadré à droite mais ramené vers le centre : le
          visage passe sous le titre, pour qu'une partie des lettres le
@@ -1264,6 +1283,7 @@
       <!-- Premier plan qui défile normalement par-dessus le fond fixe -->
       <div class="hero-fg">
 
+        <!-- Ouverture allégée : juste l'accroche et les actions -->
         <div class="hero-intro hero-centered" id="hero-content">
           <div class="hero-eyebrow">
             <span class="eyebrow-dot" aria-hidden="true"></span>
@@ -1273,15 +1293,23 @@
             <span class="line">Votre comptabilité</span>
             <span class="line"><em>simplifiée.</em></span>
           </h1>
-          <p class="hero-sub">
-            R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives.<br>
-            Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité et à prendre les bonnes décisions pour développer votre entreprise.
-          </p>
           <div class="hero-ctas">
             <a href="#contact-modal" class="btn-hero-primary" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">Prendre rendez-vous</a>
             <a href="#services" class="btn-hero-ghost">Voir les services</a>
           </div>
-          <div class="hero-stats">
+        </div>
+
+        <!-- Le reste (accroche, phrases, chiffres) monte avec le scroll -->
+        <div class="hero-statements" aria-label="Notre approche en quelques mots">
+          <p class="hero-lead">
+            R&amp;C Advisory prend en charge votre comptabilité, votre fiscalité et vos obligations administratives. Grâce à un accompagnement personnalisé et 100&nbsp;% digital, je vous aide à piloter votre activité en toute sérénité.
+          </p>
+          <p class="statement">Votre comptabilité, votre fiscalité et vos obligations administratives, gérées de A à Z.</p>
+          <p class="statement">100&nbsp;% digital. Zéro déplacement, zéro classeur en carton.</p>
+          <p class="statement">Un seul interlocuteur, qui connaît vraiment votre dossier.</p>
+          <p class="statement">Un accompagnement sur mesure, à chaque étape de votre activité.</p>
+
+          <div class="hero-stats-flow">
             <div>
               <div class="stat-num">9<span>+</span></div>
               <div class="stat-label">Ans d'expérience en comptabilité et fiscalité</div>
@@ -1299,14 +1327,6 @@
               <div class="stat-label">Accompagnement personnalisé pour chaque entreprise</div>
             </div>
           </div>
-        </div>
-
-        <!-- Phrases déjà présentes ; elles montent avec le scroll -->
-        <div class="hero-statements" aria-label="Notre approche en quelques mots">
-          <p class="statement">Votre comptabilité, votre fiscalité et vos obligations administratives, gérées de A à Z.</p>
-          <p class="statement">100&nbsp;% digital. Zéro déplacement, zéro classeur en carton.</p>
-          <p class="statement">Un seul interlocuteur, qui connaît vraiment votre dossier.</p>
-          <p class="statement">Un accompagnement sur mesure, à chaque étape de votre activité.</p>
         </div>
 
       </div>
