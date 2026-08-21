@@ -170,8 +170,8 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 9vh;
-        padding: 8vh 28px 6vh;
+        gap: 30vh;
+        padding: 30vh 28px 30vh;
       }
       .statement {
         max-width: 26ch;
@@ -1780,6 +1780,17 @@
            arrive, puis disparaît quand la dernière phrase est passée. */
         var heroSection = document.getElementById('hero');
         if (heroSection) {
+          /* L'ouverture (titre + boutons) se dissout progressivement au
+             scroll : fondu en dégradé plutôt qu'un simple glissement. */
+          gsap.to('#hero-content', {
+            opacity: 0, y: -30, ease: 'none',
+            scrollTrigger: {
+              trigger: '.hero-intro',
+              start: 'top top',
+              end: '65% top',
+              scrub: true
+            }
+          });
           /* Assombrissement du fond pendant que l'intro laisse place aux
              phrases (une fois l'intro sortie, la photo est tamisée). */
           gsap.to('#hero-scrim', {
