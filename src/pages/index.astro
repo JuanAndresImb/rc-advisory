@@ -1816,8 +1816,8 @@
           });
         }
 
-        /* ── Bento cards : stagger reveal ── */
-        gsap.from('.bento-tile', {
+        /* ── Bento cards : stagger reveal (sauf la vedette) ── */
+        gsap.from('.bento-tile:not(.tile-1)', {
           opacity: 0,
           y: 50,
           duration: 0.8,
@@ -1829,6 +1829,35 @@
             toggleActions: 'play none none reverse'
           }
         });
+
+        /* ── Tuile vedette (#tile-1) : s'ouvre en grand quand la section
+           arrive, puis se replie dans sa case du bento au scroll. Effet
+           réservé au desktop (robuste, sans pin). ── */
+        var featured = document.querySelector('.bento .tile-1');
+        if (featured && window.innerWidth >= 992) {
+          gsap.set(featured, { zIndex: 6, transformOrigin: '50% 50%' });
+          gsap.fromTo(featured,
+            { scale: 1.55, borderRadius: 0 },
+            {
+              scale: 1, borderRadius: 32, ease: 'none',
+              scrollTrigger: {
+                trigger: '#services',
+                start: 'top 90%',
+                end: 'top 15%',
+                scrub: 0.6,
+                invalidateOnRefresh: true
+              }
+            });
+        } else if (featured) {
+          gsap.from(featured, {
+            opacity: 0, y: 50, duration: 0.8, ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '#bento',
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
+          });
+        }
 
         /* ── Fade-up génériques ── */
         /* ── Scribble hand-drawn : dessin progressif au scroll ── */
