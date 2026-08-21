@@ -1802,15 +1802,15 @@
               scrub: true
             }
           });
-          /* La photo (fond) devient complètement noire à un point précis.
-             Le fond est épinglé sur ~33% du hero : on reste dans cette
-             plage pour que le fondu soit visible. Ajuster les %. */
+          /* La photo passe au noir pendant que la 1re phrase monte : dès
+             qu'elle atteint le centre, le fond est noir, donc les DEUX
+             phrases se lisent sur noir complet. */
           gsap.to('#hero-bg', {
             opacity: 0, ease: 'none',
             scrollTrigger: {
-              trigger: '#hero',
-              start: '40% top',   /* début de la disparition */
-              end: '62% top',     /* noir total */
+              trigger: '.hero-statements .statement:first-child',
+              start: 'top bottom',   /* la phrase entre par le bas */
+              end: 'top center',     /* la phrase atteint le centre : noir total */
               scrub: true
             }
           });
