@@ -171,7 +171,7 @@
         align-items: center;
         text-align: center;
         gap: 30vh;
-        padding: 30vh 28px 30vh;
+        padding: 10vh 28px 40vh;
       }
       .statement {
         max-width: 26ch;
@@ -1802,13 +1802,15 @@
               scrub: true
             }
           });
-          /* La photo (fond) disparaît quand la dernière phrase arrive. */
+          /* La photo (fond) devient complètement noire à un point précis.
+             Le fond est épinglé sur ~33% du hero : on reste dans cette
+             plage pour que le fondu soit visible. Ajuster les %. */
           gsap.to('#hero-bg', {
             opacity: 0, ease: 'none',
             scrollTrigger: {
-              trigger: '.hero-statements .statement:last-child',
-              start: 'center center',
-              end: 'bottom top',
+              trigger: '#hero',
+              start: '40% top',   /* début de la disparition */
+              end: '62% top',     /* noir total */
               scrub: true
             }
           });
