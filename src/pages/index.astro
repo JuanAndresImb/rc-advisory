@@ -1266,6 +1266,7 @@
           </h1>
           <div class="hero-ctas">
             <a href="#contact-modal" class="btn-hero-primary" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">Prendre rendez-vous</a>
+            
             <a href="#services" class="btn-hero-ghost">Voir les services</a>
           </div>
         </div>
@@ -1606,19 +1607,10 @@
         var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
 
-        /* ── Nav dark/light (indépendant de GSAP) ── */
+        /* ── Nav dark/light ── (référence ; bascule gérée plus bas via
+           ScrollTrigger, calé sur la fin du hero) */
         var nav = document.getElementById('nav');
         var hero = document.getElementById('hero');
-        if (nav && hero) {
-          var sentinel = document.createElement('div');
-          sentinel.style.cssText = 'position:absolute;top:' + (window.innerHeight - 1) + 'px;height:1px;width:100%;pointer-events:none;';
-          hero.style.position = 'relative';
-          hero.appendChild(sentinel);
-          new IntersectionObserver(
-            function (entries) { nav.classList.toggle('nav--light', !entries[0].isIntersecting); },
-            { threshold: 0 }
-          ).observe(sentinel);
-        }
 
         /* ── Modale contact (email + WhatsApp) ── */
         var modal = document.getElementById('contact-modal');
@@ -1662,6 +1654,18 @@
         if (!hasGsap || reduceMotion) { return; }
 
         gsap.registerPlugin(ScrollTrigger);
+
+        /* ── Nav : passe en clair quand le hero se termine (arrivée de la
+           section claire sous la nav). Calé sur la fin du hero. ── */
+        if (nav && hero) {
+          var navH = nav.offsetHeight || 72;
+          ScrollTrigger.create({
+            trigger: '#hero',
+            start: 'bottom ' + navH,   /* bas du hero à hauteur de la nav */
+            onEnter: function () { nav.classList.add('nav--light'); },
+            onLeaveBack: function () { nav.classList.remove('nav--light'); }
+          });
+        }
 
         /* ── Lenis smooth scroll ── */
         var lenis = null;
