@@ -787,41 +787,49 @@
         max-width: 60ch;
         margin: 0 auto 20px;
       }
-      .contact-actions {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-top: 40px;
-      }
-      .btn-contact {
+      /* Remate destacado : « Premier entretien offert » — le point sur
+         lequel on s'arrête. Statement éditorial cliquable (ouvre le popup). */
+      .contact-offer {
         display: inline-flex;
+        flex-direction: column;
         align-items: center;
-        gap: 10px;
-        padding: 16px 32px;
-        border-radius: var(--r-btn);
-        background: var(--accent);
-        color: #fff;
-        font-family: var(--font);
-        font-size: 0.95rem;
-        font-weight: 700;
-        border: none;
+        gap: 12px;
+        margin-top: 56px;
+        padding-top: 44px;
+        border-top: 1px solid var(--border);
+        text-decoration: none;
         cursor: pointer;
-        transition: background 0.18s, transform 0.12s;
+        max-width: 46ch;
       }
-      .btn-contact:hover { background: var(--accent-dk); }
-      .btn-contact:active { transform: scale(0.98); }
-      .btn-contact svg { transition: transform 0.2s ease; }
-      .btn-contact:hover svg { transform: translateX(3px); }
-      .free-pill {
-        display: inline-block;
-        padding: 8px 18px;
-        border-radius: var(--r-btn);
-        background: var(--accent-pale);
+      .contact-offer-main {
+        position: relative;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(1.9rem, 3.8vw, 2.9rem);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
         color: var(--accent-dk);
-        font-size: 0.8rem;
-        font-weight: 700;
+      }
+      .contact-offer-main::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 100%;
+        height: 2px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .contact-offer:hover .contact-offer-main::after,
+      .contact-offer:focus-visible .contact-offer-main::after { transform: scaleX(1); }
+      .contact-offer-sub {
+        font-size: 0.98rem;
+        line-height: 1.6;
+        color: var(--muted);
+        max-width: 42ch;
       }
 
       .contact-cards {
@@ -1457,21 +1465,13 @@
           Parlons de <em>votre situation.</em>
         </h2>
         <p class="contact-p contact-reveal">
-          Que vous soyez en phase de création, indépendant ou dirigeant d'une société, prenons le temps d'échanger sur vos besoins et vos objectifs.
+          Création, indépendant ou dirigeant de société&nbsp;: prenons le temps d'échanger sur vos besoins et vos objectifs.
         </p>
-        <p class="contact-p contact-reveal">
-          Chez R&amp;C Advisory, vous bénéficiez d'un accompagnement personnalisé, d'une gestion 100&nbsp;% digitale et d'un interlocuteur unique qui connaît réellement votre dossier.
-        </p>
-        <p class="contact-p contact-reveal">
-          Le premier entretien est gratuit et sans engagement. L'occasion de découvrir comment nous pouvons vous aider à piloter votre activité en toute sérénité.
-        </p>
-        <div class="contact-actions contact-reveal">
-          <a href="#contact-modal" class="btn-contact" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">
-            Prendre rendez-vous
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </a>
-          <span class="free-pill">Premier entretien offert</span>
-        </div>
+
+        <a href="#contact-modal" class="contact-offer contact-reveal" data-modal-open aria-haspopup="dialog" aria-controls="contact-modal">
+          <span class="contact-offer-main">Premier entretien offert</span>
+          <span class="contact-offer-sub">Gratuit et sans engagement — le temps de voir comment piloter votre activité en toute sérénité.</span>
+        </a>
       </div>
     </section>
 
