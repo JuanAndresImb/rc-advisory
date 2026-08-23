@@ -1199,13 +1199,24 @@
            visage (haut du portrait). */
         /* Mobile : le panorama serait minuscule en bas, on repasse en
            plein cadre zoomé sur le sujet, en fond discret. */
-        .hero-photo-wrap { top: -8%; bottom: auto; height: 116%; width: 100%; opacity: 0.55; }
-        .hero-photo-wrap img { height: 100%; object-fit: cover; object-position: 64% center; }
+        .hero-photo-wrap { top: 9%; bottom: auto; height: 116%; width: 100%; opacity: 0.55; }
+        .hero-photo-wrap img { height: 100%; object-fit: cover; object-position: 64% 18%; }
         .hero-photo-wrap::before {
           background: linear-gradient(to right, var(--dark) 0%, rgba(14,11,7,0.8) 50%, rgba(14,11,7,0.62) 100%);
         }
         .hero-glow { display: none; }
         .hero-stats { gap: 24px; }
+
+        /* Hero mobile : plus d'air, texte et boutons amplifiés (façon Apple),
+           l'ensemble reste centré verticalement. */
+        .hero-intro { padding: calc(var(--nav-h) + 40px) 24px 56px; }
+        .hero-eyebrow { margin-bottom: 30px; }
+        .hero-title { font-size: 3.5rem; line-height: 1.0; margin-bottom: 44px; }
+        .hero-ctas { gap: 14px; margin-top: 8px; }
+        .btn-hero-primary, .btn-hero-ghost {
+          padding: 18px 32px;
+          font-size: 1.02rem;
+        }
 
         .services { padding: 72px 0 88px; }
         .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
