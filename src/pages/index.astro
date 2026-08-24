@@ -1014,10 +1014,11 @@
         background: var(--dark);
         /* La section adopte le ratio de la photo pour l'afficher en
            entier sur grand écran ; le min-height sert de garde-fou sur
-           les largeurs étroites (là, on cadre le côté droit, la coupole). */
+           les largeurs étroites (là, on cadre le côté droit, la coupole).
+           Agrandie : elle forme le haut d'un long footer continu. */
         aspect-ratio: 2166 / 726;
-        min-height: 360px;
-        max-height: 460px;
+        min-height: 560px;
+        max-height: 720px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1105,7 +1106,10 @@
         position: relative;
         border-top: none;
         overflow: hidden;
-        padding: 20px 0 20px;
+        /* Agrandi : prolonge directement la photo du dessus pour former
+           un seul long footer. Le padding généreux crée l'ampleur. */
+        padding: 96px 0 56px;
+        margin-top: -1px;            /* soudure invisible avec le closing */
         /* Dégradé chaud qui reprend la lumière du ciel de la photo
            au-dessus, puis fond vers le dark. Pas d'image de fond. */
         background:
@@ -1118,8 +1122,9 @@
         z-index: 1;
         display: grid;
         grid-template-columns: 1.2fr 1fr 1fr;
-        gap: 40px;
-        padding-bottom: 32px;
+        gap: 56px;
+        padding-bottom: 56px;
+        margin-bottom: 8px;
       }
       .footer-logo {
         width: 200px;
