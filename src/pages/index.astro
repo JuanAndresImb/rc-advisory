@@ -1105,7 +1105,9 @@
       .footer {
         position: relative;
         border-top: none;
-        overflow: hidden;
+        /* overflow visible : les vagues lumineuses remontent dans la photo
+           du dessus (voir .footer-wave) pour prolonger l'effet. */
+        overflow: visible;
         /* Agrandi : prolonge directement la photo du dessus pour former
            un seul long footer. Le padding généreux crée l'ampleur. */
         padding: 96px 0 56px;
@@ -1176,7 +1178,25 @@
       }
       .footer-legal a:hover { color: rgba(255,255,255,0.7); }
 
-      /* Vagues lumineuses : flux continu sur tout le footer */
+      /* Traîne lumineuse : monte de la soudure jusque vers le milieu de la
+         photo. Dégradé de marque orange (soudure) → doré (qui s'évanouit en
+         haut). C'est la « rallonge » du trait dans l'image. */
+      .footer-uplight {
+        position: absolute;
+        left: 0; right: 0;
+        top: -300px;              /* atteint ~le milieu de l'image (560px) */
+        height: 340px;
+        pointer-events: none;
+        z-index: 0;
+        mix-blend-mode: screen;
+        filter: blur(38px);
+        background:
+          radial-gradient(ellipse 60% 100% at 16% 100%, rgba(240,130,28,0.55) 0%, rgba(243,160,32,0.30) 30%, transparent 70%),
+          linear-gradient(to top, rgba(240,130,28,0.42) 0%, rgba(243,175,40,0.22) 38%, rgba(239,218,31,0.10) 62%, transparent 100%);
+      }
+
+      /* Vagues lumineuses : le trait net au niveau de la soudure. Teintes de
+         marque orange → doré (comme le swoosh du logo). */
       .footer-wave {
         position: absolute;
         inset: 0;
@@ -1187,11 +1207,11 @@
         mix-blend-mode: screen;
       }
       .footer-wave-1 { filter: blur(40px); opacity: 0.55; }
-      .footer-wave-1 path { fill: rgba(240,130,28,0.50); }
-      .footer-wave-2 { filter: blur(30px); opacity: 0.45; }
-      .footer-wave-2 path { fill: rgba(240,130,28,0.38); }
-      .footer-wave-3 { filter: blur(22px); opacity: 0.35; }
-      .footer-wave-3 path { fill: rgba(240,130,28,0.28); }
+      .footer-wave-1 path { fill: rgba(239,218,31,0.34); }   /* doré */
+      .footer-wave-2 { filter: blur(30px); opacity: 0.50; }
+      .footer-wave-2 path { fill: rgba(243,160,32,0.36); }   /* ambre */
+      .footer-wave-3 { filter: blur(22px); opacity: 0.55; }
+      .footer-wave-3 path { fill: rgba(240,130,28,0.40); }   /* orange */
 
       /* ────────────────────────────────────────────────
          RESPONSIVE
@@ -1632,6 +1652,7 @@
 
     <!-- FOOTER ───────────────────────────────────────── -->
     <footer class="footer" role="contentinfo">
+      <div class="footer-uplight" aria-hidden="true"></div>
       <svg class="footer-wave footer-wave-1" viewBox="0 0 1440 240" preserveAspectRatio="none" aria-hidden="true">
         <path id="wave-1" d="M0,80 C200,30 400,130 600,75 C800,20 1000,140 1200,85 C1320,55 1440,120 1440,80 L1440,240 L0,240 Z"/>
       </svg>
