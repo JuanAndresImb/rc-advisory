@@ -320,25 +320,19 @@
       .hero-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 5px 14px;
-        border-radius: var(--r-btn);
-        border: 1px solid rgba(255,255,255,0.15);
-        background: rgba(255,255,255,0.06);
-        backdrop-filter: blur(8px);
-        color: rgba(255,255,255,0.65);
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        gap: 10px;
+        color: rgba(255,255,255,0.55);
+        font-size: 0.82rem;
+        font-weight: 400;
+        letter-spacing: 0.02em;
         margin-bottom: 28px;
       }
-      /* Marque « slash » : un signe de balisage plus original qu'un point */
+      /* Petit trait accent, discret, en guise de signature */
       .eyebrow-dot {
-        width: 10px; height: 12px;
+        width: 22px; height: 1px;
         flex-shrink: 0;
         background: var(--accent);
-        clip-path: polygon(38% 0, 100% 0, 62% 100%, 0 100%);
+        opacity: 0.85;
       }
 
       /* ── Hero centré (façon Apple TV) : tout empilé et centré ── */
@@ -525,7 +519,7 @@
       .bento {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
-        grid-template-rows: 340px 260px;
+        grid-template-rows: 260px 260px;
         gap: 14px;
       }
 
@@ -621,19 +615,14 @@
       .tile-2 .tile-desc { color: rgba(255,255,255,0.55); }
       .tile-3 .tile-desc { color: rgba(255,255,255,0.75); }
 
-      .tile-1::after {
-        content: '100%';
-        position: absolute;
-        right: -8px; bottom: -30px;
-        font-family: var(--font-display);
-        font-size: clamp(100px, 14vw, 180px);
-        font-weight: 700;
-        letter-spacing: -0.04em;
-        line-height: 1;
-        color: rgba(240,130,28,0.12);
-        pointer-events: none;
-        user-select: none;
-        z-index: 3;
+      /* Traitement chaud, accordé à la palette ambre du site */
+      .tile-1 .tile-img {
+        filter: brightness(0.6) saturate(0.82) sepia(0.32) hue-rotate(-6deg) contrast(1.04);
+      }
+      .tile-1 .tile-overlay {
+        background:
+          linear-gradient(to top, rgba(14,11,7,0.9) 0%, rgba(30,20,11,0.5) 52%, rgba(30,20,11,0.28) 100%),
+          linear-gradient(120deg, rgba(181,84,10,0.28) 0%, transparent 60%);
       }
 
       /* ────────────────────────────────────────────────
@@ -1282,7 +1271,7 @@
         /* Tablette : ratio naturel comme sur desktop. */
         .hero-photo-wrap { width: 100%; right: 0; }
         .hero-glow { display: none; }
-        .bento { grid-template-rows: 280px 220px; gap: 12px; }
+        .bento { grid-template-rows: 240px 240px; gap: 12px; }
         .pourquoi-inner { gap: 56px; }
         .pourquoi-deco-photo { width: 35%; left: -40px; }
       }
@@ -1386,8 +1375,8 @@
           <div class="bento-tile tile-1">
             <img
               class="tile-img"
-              src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&h=600&q=75"
-              alt="Bureau moderne digital"
+              src="/services-creation.jpg"
+              alt="Deux personnes étudient un plan financier et les formalités de création d'entreprise"
               loading="lazy"
               width="900" height="600"
             />
